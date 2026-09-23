@@ -12,6 +12,7 @@ import { encryptString, decryptString } from '@/lib/crypto';
 import { analyzeText } from '@/lib/analysis';
 import { buildCommitment } from '@/lib/merkle';
 import { anchorRoot, stampBitcoin, verifyBitcoin } from '@/lib/relay';
+import { track } from '@/usage';
 import type {
   CaseSummary,
   EvidenceItem,
@@ -125,6 +126,7 @@ export async function createCase(key: CryptoKey, input: CaseInput): Promise<Case
     cipher: await encryptString(key, JSON.stringify(plain)),
   };
   await db.cases.add(record);
+  track('record_created'); // anonymous usage count only — no case content leaves the device
   return summarise(key, record, []);
 }
 
@@ -203,6 +205,7 @@ export async function addEvidence(key: CryptoKey, input: EvidenceInput): Promise
     mediaCipher,
   };
   await db.evidence.add(record);
+  track('evidence_added'); // anonymous count only — evidence content never leaves the device
   return {
     id: record.id,
     caseId: record.caseId,
@@ -286,6 +289,7 @@ export async function saveAccount(
   };
   const record: StoredAccount = { caseId, cipher: await encryptString(key, JSON.stringify(plain)) };
   await db.accounts.put(record);
+  track('record_updated'); // anonymous count only — the account narrative never leaves the device
   return { caseId, ...plain };
 }
 
@@ -361,6 +365,7 @@ export async function anchorToSolana(caseId: string): Promise<StoredCommitment> 
   await db.commitments.put(updated);
   // Reflect committed status on the evidence cards.
   await db.evidence.where('caseId').equals(caseId).modify({ commitmentStatus: 'solana' });
+  track('verification_performed'); // anonymous count of the on-chain anchoring operation
   return updated;
 }
 

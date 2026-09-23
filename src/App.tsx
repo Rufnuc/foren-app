@@ -5,6 +5,7 @@ import { queryClient } from '@/lib/queryClient';
 import { router } from '@/routes/router';
 import { ErrorBoundary, SecureContextGuard, PuzzleSplash } from '@/components';
 import { useVaultStore } from '@/store/vaultStore';
+import { initUsage } from '@/usage';
 
 // Minimum time the "Puzzle" game-intro splash stays up, so a fast init still
 // looks like a game booting rather than a flicker.
@@ -24,6 +25,13 @@ function Boot({ children }: { children: ReactNode }) {
   useEffect(() => {
     void init();
   }, [init]);
+
+  // Once the app has initialised, ensure the anonymous usage identity exists
+  // and flush any counters pending from a previous session. Best-effort and
+  // fully isolated from the vault — see src/usage/.
+  useEffect(() => {
+    if (initialized) void initUsage();
+  }, [initialized]);
 
   useEffect(() => {
     const t = setTimeout(() => setMinElapsed(true), SPLASH_MIN_MS);
