@@ -21,5 +21,11 @@
     "3": "high",
     "4": "critical"
   },
-  "usage": "sigmoid(tag_logits) + per-tag threshold; softmax(severity_logits) then argmax (+1)"
+  "thresholds": {
+    "threat": 0.35,
+    "physical-violence": 0.35,
+    "sexual": 0.35,
+    "coercive-control": 0.6
+  },
+  "usage": "sigmoid(tag_logits) + per-tag threshold; softmax(severity_logits) then argmax (+1). Danger tags (threat/physical-violence/sexual) use 0.35 for high recall; coercive-control uses 0.6 to suppress benign imperative false positives (true cases fire ~0.95). Others default to 0.5."
 }
