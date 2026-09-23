@@ -76,7 +76,7 @@ export function Minesweeper() {
     setBoard(result === 'lost' ? revealMines(next) : next);
     setStatus(result);
     haptic(result === 'won' ? 30 : 60);
-    recordResult(GAME_ID, result === 'won');
+    recordResult(GAME_ID, result === 'won', { seconds });
   };
 
   const onReveal = (i: number) => {

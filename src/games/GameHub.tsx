@@ -4,88 +4,118 @@ import { Game2048 } from './Game2048';
 import { Sudoku } from './Sudoku';
 import { Wordle } from './Wordle';
 import { Minesweeper } from './Minesweeper';
-import { loadActiveGame, saveActiveGame } from './gameStore';
+import { loadActiveGame, saveActiveGame, getStats } from './gameStore';
+import { StatsPanel } from './StatsPanel';
 
 interface Entry {
   id: GameType;
   name: string;
   icon: string;
+  desc: string;
   Component: ComponentType;
 }
 
 const GAMES: Entry[] = [
-  { id: 'game2048', name: '2048', icon: '🔢', Component: Game2048 },
-  { id: 'sudoku', name: 'Sudoku', icon: '🧩', Component: Sudoku },
-  { id: 'wordle', name: 'Wordle', icon: '🔡', Component: Wordle },
-  { id: 'minesweeper', name: 'Mines', icon: '💣', Component: Minesweeper },
+  { id: 'game2048', name: '2048', icon: '🔢', desc: 'Slide tiles, combine numbers', Component: Game2048 },
+  { id: 'sudoku', name: 'Sudoku', icon: '🧩', desc: 'Fill the grid', Component: Sudoku },
+  { id: 'wordle', name: 'Wordle', icon: '🔡', desc: 'Guess the word', Component: Wordle },
+  { id: 'minesweeper', name: 'Mines', icon: '💣', desc: 'Clear the field', Component: Minesweeper },
 ];
 
-// The decoy "app": renders the active game with a discreet switcher so all games
-// are reachable — making the disguise read as a real puzzle collection someone
-// uses, not a single stub. The active game persists across launches. The unlock
-// gestures live in the GameDisguise wrapper around this and are unaffected.
+function summary(id: string): string {
+  const s = getStats(id);
+  if (!s.played) return 'Not played yet';
+  const parts = [`${s.won}/${s.played} won`];
+  if (s.streak > 0) parts.push(`streak ${s.streak}`);
+  if (s.bestTime != null) parts.push(`best ${s.bestTime}s`);
+  return parts.join(' · ');
+}
+
+// The decoy "app": a Puzzles home listing every game with its stats, and per-game
+// views with a stats/history panel. Reads as a real puzzle collection someone
+// actually uses. The unlock gestures live in the GameDisguise wrapper and work
+// on both the home and game views.
 export function GameHub({ defaultGame }: { defaultGame: GameType }) {
   const [active, setActive] = useState<GameType>(
     () => (loadActiveGame() as GameType | null) ?? defaultGame,
   );
-  const [picking, setPicking] = useState(false);
+  const [view, setView] = useState<'home' | 'game'>('home');
+  const [statsOpen, setStatsOpen] = useState(false);
 
   const current = GAMES.find((g) => g.id === active) ?? GAMES[0];
   const Current = current.Component;
 
-  const choose = (id: GameType) => {
+  const openGame = (id: GameType) => {
     setActive(id);
     saveActiveGame(id);
-    setPicking(false);
+    setView('game');
   };
+
+  if (view === 'home') {
+    return (
+      <div className="flex w-full max-w-app flex-col gap-3 px-1">
+        <h1 className="mb-1 text-center text-2xl font-bold tracking-wide text-gold">Puzzles</h1>
+        {GAMES.map((g) => (
+          <button
+            key={g.id}
+            type="button"
+            onClick={() => openGame(g.id)}
+            className="card flex items-center gap-4 text-left transition-colors hover:bg-surface/80"
+          >
+            <span className="text-3xl" aria-hidden="true">{g.icon}</span>
+            <span className="flex-1">
+              <span className="block font-semibold text-primary">{g.name}</span>
+              <span className="block text-xs text-secondary">{g.desc}</span>
+              <span className="mt-0.5 block text-[11px] text-gold/80">{summary(g.id)}</span>
+            </span>
+            <span className="text-gold" aria-hidden="true">→</span>
+          </button>
+        ))}
+        <div className="card flex items-center gap-4 opacity-60">
+          <span className="text-3xl" aria-hidden="true">✨</span>
+          <span className="flex-1 font-semibold text-primary">More games coming soon</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex w-full flex-col items-center pt-1">
-      {/* Discreet games button (top-right; the top-left corner is the unlock activator). */}
-      <button
-        type="button"
-        aria-label="Games"
-        onClick={() => setPicking(true)}
-        className="absolute right-2 top-0 z-10 rounded-lg p-2 text-secondary transition-colors hover:text-primary"
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <rect x="3" y="3" width="7" height="7" rx="1.5" />
-          <rect x="14" y="3" width="7" height="7" rx="1.5" />
-          <rect x="3" y="14" width="7" height="7" rx="1.5" />
-          <rect x="14" y="14" width="7" height="7" rx="1.5" />
-        </svg>
-      </button>
+      <div className="mb-1 flex w-full max-w-app items-center justify-between px-1">
+        <button
+          type="button"
+          onClick={() => setView('home')}
+          aria-label="All games"
+          className="rounded-lg p-1.5 text-secondary transition-colors hover:text-primary"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
+            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+          </svg>
+        </button>
+        <span className="text-xs font-semibold uppercase tracking-widest text-secondary">
+          {current.name}
+        </span>
+        <button
+          type="button"
+          onClick={() => setStatsOpen(true)}
+          aria-label="Statistics"
+          className="rounded-lg p-1.5 text-secondary transition-colors hover:text-primary"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="3" y="12" width="4" height="9" rx="1" />
+            <rect x="10" y="7" width="4" height="14" rx="1" />
+            <rect x="17" y="3" width="4" height="18" rx="1" />
+          </svg>
+        </button>
+      </div>
 
       <Current key={active} />
 
-      {picking && (
-        <div
-          className="fixed inset-0 z-40 flex items-center justify-center bg-black/80 p-6"
-          onClick={() => setPicking(false)}
-        >
-          <div className="card w-full max-w-app" onClick={(e) => e.stopPropagation()}>
-            <p className="mb-3 text-center text-sm font-semibold text-primary">Choose a game</p>
-            <div className="grid grid-cols-2 gap-3">
-              {GAMES.map((g) => (
-                <button
-                  key={g.id}
-                  type="button"
-                  onClick={() => choose(g.id)}
-                  className={`flex flex-col items-center gap-2 rounded-xl p-4 transition-colors ${
-                    g.id === active ? 'bg-plum text-primary' : 'bg-surface text-secondary hover:text-primary'
-                  }`}
-                >
-                  <span className="text-3xl" aria-hidden="true">{g.icon}</span>
-                  <span className="text-sm font-semibold">{g.name}</span>
-                </button>
-              ))}
-              <div className="col-span-2 flex items-center justify-center gap-2 rounded-xl bg-surface/50 p-3 text-secondary/70">
-                <span aria-hidden="true">✨</span>
-                <span className="text-xs">More games coming soon</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      {statsOpen && (
+        <StatsPanel gameId={active} gameName={current.name} onClose={() => setStatsOpen(false)} />
       )}
     </div>
   );
