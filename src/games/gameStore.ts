@@ -39,21 +39,38 @@ export function clearGame(gameId: string): void {
   remove(`state_${gameId}`);
 }
 
-// ── Stats / streaks, per game ──────────────────────────────────────────────
+// ── Stats / streaks / history, per game ────────────────────────────────────
 export interface GameStats {
   played: number;
   won: number;
   streak: number;
   bestStreak: number;
+  bestTime?: number; // seconds (timed games), best winning time
 }
 const EMPTY: GameStats = { played: 0, won: 0, streak: 0, bestStreak: 0 };
+
+export interface HistoryEntry {
+  won: boolean;
+  at: number; // epoch ms
+  seconds?: number;
+  guesses?: number; // Wordle: which guess number won (1–6)
+}
+const HISTORY_MAX = 30;
 
 export function getStats(gameId: string): GameStats {
   return read<GameStats>(`stats_${gameId}`) ?? { ...EMPTY };
 }
 
-/** Record a finished game. Returns the updated stats. */
-export function recordResult(gameId: string, won: boolean): GameStats {
+export function getHistory(gameId: string): HistoryEntry[] {
+  return read<HistoryEntry[]>(`hist_${gameId}`) ?? [];
+}
+
+/** Record a finished game (updates stats + prepends a history entry). */
+export function recordResult(
+  gameId: string,
+  won: boolean,
+  opts?: { seconds?: number; guesses?: number },
+): GameStats {
   const s = getStats(gameId);
   const streak = won ? s.streak + 1 : 0;
   const next: GameStats = {
@@ -61,8 +78,13 @@ export function recordResult(gameId: string, won: boolean): GameStats {
     won: s.won + (won ? 1 : 0),
     streak,
     bestStreak: Math.max(s.bestStreak, streak),
+    bestTime:
+      won && opts?.seconds != null ? Math.min(s.bestTime ?? Infinity, opts.seconds) : s.bestTime,
   };
   write(`stats_${gameId}`, next);
+
+  const entry: HistoryEntry = { won, at: Date.now(), seconds: opts?.seconds, guesses: opts?.guesses };
+  write(`hist_${gameId}`, [entry, ...getHistory(gameId)].slice(0, HISTORY_MAX));
   return next;
 }
 

@@ -76,7 +76,7 @@ export function Wordle() {
     if (current === target) {
       setDone('won');
       flashToast('Splendid!');
-      recordResult(GAME_ID, true);
+      recordResult(GAME_ID, true, { guesses: next.length });
       haptic(30);
     } else if (next.length >= MAX_GUESSES) {
       setDone('lost');
