@@ -1,0 +1,97 @@
+{"text": "can u grab bread and eggs on ur way back pls 🙏", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "runnin bout 15 late, traffic is mad", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "did the school ring about the trip money?", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "happy anniversary babe ❤️ cant wait for tonight", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "you need to leave by 8 or you'll miss the train", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "remember to book the dentist, ur tooth again lol", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "the boiler guys coming tues between 9-12", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "u free sat? thinking we do a roast at mums", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "kids got footie at 10, can u drop em?", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "thanks for sorting dinner, was lovely x", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "omg the dog ate ur slipper again 😂", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "pick the little one up at 3 yeah? i'm stuck at work", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "can you pay me back the £20 when you get a sec", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "you always know how to make me laugh 😅", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "tu peux prendre du pain en rentrant stp", "lang": "fr", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "recoge a los niños a las 3 porfa, estoy liada", "lang": "es", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "momken tegib 3eesh w laban we anta gay? 🙏", "lang": "ar", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "wnei di nol y plant am 3? dwi'n sownd yn gwaith", "lang": "cy", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "loved the film, we should do that again soon", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "just landed, txt when ur up ✈️", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "if u walk out that door i swear to god ur dead 🔪", "lang": "en", "tags": ["threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "i'll kill u before i let u take my kids", "lang": "en", "tags": ["threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "come home NOW or i'll put u in hospital", "lang": "en", "tags": ["threat", "physical-violence"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "you have no idea wat im capable of dont test me", "lang": "en", "tags": ["threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "keep talkin n see wat happens to u", "lang": "en", "tags": ["threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "watch ur back when u leave work tmrw", "lang": "en", "tags": ["threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "ur gona regret the day u met me i promise u that", "lang": "en", "tags": ["threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "si tu me quittes je te jure que je te tue", "lang": "fr", "tags": ["threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "si te vas de esa casa no sales viva", "lang": "es", "tags": ["threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "law meshity hamawetek, mafish makan hatekhtebi feh", "lang": "ar", "tags": ["threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "إذا قلتي لحد هأنهي حياتك", "lang": "ar", "tags": ["threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "os ei di, mi wna i dy ladd di, dwi o ddifri", "lang": "cy", "tags": ["threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "say one word to anyone and u will never see the kids again", "lang": "en", "tags": ["threat", "child-related"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "shouldnt have made me hit u, next time it'll be worse", "lang": "en", "tags": ["physical-violence"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "i'll break every bone in ur body", "lang": "en", "tags": ["physical-violence", "threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "come here NOW before i drag u by ur hair", "lang": "en", "tags": ["physical-violence"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "u want another black eye like last time??", "lang": "en", "tags": ["physical-violence"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "la prochaine fois ce sera pas qu'une gifle", "lang": "fr", "tags": ["physical-violence"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "te voy a partir la cara cuando llegue", "lang": "es", "tags": ["physical-violence"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "hadrabek darb tefkary feh kol youm", "lang": "ar", "tags": ["physical-violence"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "saw u at the cafe on high st with him 👀 u cant hide", "lang": "en", "tags": ["stalking"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "i know u went to sarahs, i can see ur location 📍", "lang": "en", "tags": ["stalking", "surveillance"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "read ur whatsapp while u were asleep. who's dave??", "lang": "en", "tags": ["surveillance"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "i put life360 on ur phone so dont bother lying", "lang": "en", "tags": ["surveillance"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "im parked outside. i can see the light on 👀", "lang": "en", "tags": ["stalking"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "checked ur search history again", "lang": "en", "tags": ["surveillance"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "je t'ai vue sortir du travail avec lui, je sais tout", "lang": "fr", "tags": ["stalking", "surveillance"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "revise tu movil otra vez, quien es ese?", "lang": "es", "tags": ["surveillance"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "shoftek nazla mn el shoghl m3ah, mfeesh 7aga tkhbeeha 3any", "lang": "ar", "tags": ["stalking"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "dwi'n gwybod lle est ti neithiwr, paid a gwadu", "lang": "cy", "tags": ["stalking"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "u dont go anywhere without askin me first, understood", "lang": "en", "tags": ["coercive-control"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "delete his number rn and show me", "lang": "en", "tags": ["coercive-control"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "i dont want u seeing ur sister anymore shes poison", "lang": "en", "tags": ["coercive-control", "isolation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "its me or ur so-called friends, choose", "lang": "en", "tags": ["isolation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "u wear wat i say ur not going out dressed like that", "lang": "en", "tags": ["coercive-control"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "check with me b4 u make any plans w anyone", "lang": "en", "tags": ["coercive-control"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "tu sors pas sans ma permission, c'est clair?", "lang": "fr", "tags": ["coercive-control"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "no quiero que veas mas a tu familia, me oyes", "lang": "es", "tags": ["coercive-control", "isolation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "mate5rogeesh mn gher ma testa2zeeny, fahma?", "lang": "ar", "tags": ["coercive-control"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "dwyt ti ddim yn gweld dy ffrindiau eto, deall?", "lang": "cy", "tags": ["isolation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "i cancelled ur card. u get money when u behave", "lang": "en", "tags": ["financial-abuse"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "hand over ur wages friday like always", "lang": "en", "tags": ["financial-abuse", "coercive-control"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "show me every receipt from today. all of them", "lang": "en", "tags": ["financial-abuse"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "u dont need ur own account, i handle the money", "lang": "en", "tags": ["financial-abuse"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "tu me donnes ta paye, c'est moi qui gere l'argent", "lang": "fr", "tags": ["financial-abuse"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "ensename en que gastaste mi dinero hoy", "lang": "es", "tags": ["financial-abuse"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "matlmeseesh el 7esab, ana elly bstsaref", "lang": "ar", "tags": ["financial-abuse"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "answer ur phone. 27 missed calls. ANSWER ME", "lang": "en", "tags": ["contact-breach", "harassment"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "i can see uve read this. reply. now.", "lang": "en", "tags": ["harassment"], "severity": 1, "source": "gold-eval-draft"}
+{"text": "ill keep textin till u answer, all night if i have to", "lang": "en", "tags": ["contact-breach"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "u dont get to just ignore me and walk off", "lang": "en", "tags": ["harassment"], "severity": 1, "source": "gold-eval-draft"}
+{"text": "je t'ai appelee 30 fois, reponds bordel", "lang": "fr", "tags": ["contact-breach"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "contestame ya, no puedes ignorarme asi", "lang": "es", "tags": ["harassment"], "severity": 1, "source": "gold-eval-draft"}
+{"text": "ill tell the court ur an unfit mother and take em", "lang": "en", "tags": ["child-related", "threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "the kids stay with me or else, ur choice", "lang": "en", "tags": ["child-related", "coercive-control"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "no judge will EVER give u custody trust me", "lang": "en", "tags": ["child-related"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "tu reverras jamais les enfants si tu parles", "lang": "fr", "tags": ["child-related", "threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "u remember wat happened last time u talked back yeah", "lang": "en", "tags": ["intimidation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "id be very very careful about ur next move", "lang": "en", "tags": ["intimidation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "u've seen wat i can do. dont push me 😊", "lang": "en", "tags": ["intimidation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "ya sabes lo que pasa cuando me haces enojar", "lang": "es", "tags": ["intimidation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "ur pathetic honestly no one else would ever want u", "lang": "en", "tags": ["degradation"], "severity": 1, "source": "gold-eval-draft"}
+{"text": "ur crazy that never happened, ur imaginin things again", "lang": "en", "tags": ["degradation", "manipulation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "if u leave ill hurt myself and itll be on u", "lang": "en", "tags": ["manipulation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "after everythin ive done for u, this is how u repay me", "lang": "en", "tags": ["manipulation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "look at the state of u, who'd want that lol", "lang": "en", "tags": ["degradation"], "severity": 1, "source": "gold-eval-draft"}
+{"text": "si tu pars je me fais du mal, ce sera ta faute", "lang": "fr", "tags": ["manipulation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "law sebteny hamawet nafsy w hatkoon 3aleky", "lang": "ar", "tags": ["manipulation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "ti'n dda i ddim, fyddai neb arall dy eisiau di", "lang": "cy", "tags": ["degradation"], "severity": 1, "source": "gold-eval-draft"}
+{"text": "leave n those pics of u go straight to ur whole family", "lang": "en", "tags": ["sexual", "threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "u dont get to say no to me, ur my girlfriend", "lang": "en", "tags": ["sexual", "coercive-control"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "i still have the videos. behave.", "lang": "en", "tags": ["sexual", "threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "si te vas mando las fotos a todos", "lang": "es", "tags": ["sexual", "threat"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "wallah if u tell anyone ur finished, i mean it", "lang": "en", "tags": ["threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "no vas a ningun lado without asking me first", "lang": "en", "tags": ["coercive-control"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "i saw ur location, kont fen? who were u with", "lang": "en", "tags": ["surveillance"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "ok habibi see u at 6, dont forget the milk 🥛", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}

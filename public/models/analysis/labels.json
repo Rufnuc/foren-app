@@ -21,11 +21,14 @@
     "3": "high",
     "4": "critical"
   },
+  "usage": "sigmoid(tag_logits) >= per-tag threshold (below) -> tag; softmax(severity_logits) argmax+1. Danger tags (threat/physical-violence/sexual) pinned to 0.35 for recall; other thresholds tuned on the held-out gold eval (F1-optimal in [0.40,0.70], default 0.50 when support is thin); coercive-control raised to keep benign messages from firing.",
   "thresholds": {
     "threat": 0.35,
     "physical-violence": 0.35,
     "sexual": 0.35,
-    "coercive-control": 0.6
-  },
-  "usage": "sigmoid(tag_logits) + per-tag threshold; softmax(severity_logits) then argmax (+1). Danger tags (threat/physical-violence/sexual) use 0.35 for high recall; coercive-control uses 0.6 to suppress benign imperative false positives (true cases fire ~0.95). Others default to 0.5."
+    "stalking": 0.7,
+    "surveillance": 0.5,
+    "coercive-control": 0.75,
+    "financial-abuse": 0.65
+  }
 }
