@@ -8,6 +8,7 @@ import {
   type SolanaVerification,
 } from '@/lib/verifyBundle';
 import { verifyOts } from '@/lib/ots';
+import { track } from '@/usage';
 import { verifyEvidenceProof } from '@/lib/zkProver';
 import type { ExportBundle } from '@/lib/exportBundle';
 
@@ -58,6 +59,7 @@ export function Verify() {
       const bitcoin = await verifyBitcoinAnchor(parsed);
       const zk = await verifyZkProof(parsed);
       setResults({ caseTitle: parsed.case.title, merkle, solana, bitcoin, zk });
+      track('verification_performed'); // anonymous count only — the bundle stays in-browser
     } finally {
       setBusy(false);
     }

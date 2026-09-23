@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal } from './Modal';
 import type { CaseSummary, EvidenceItem } from '@/types';
 import { buildBundle, downloadJson } from '@/lib/exportBundle';
+import { track } from '@/usage';
 
 interface ExportModalProps {
   summary: CaseSummary;
@@ -54,6 +55,7 @@ export function ExportModal({
         bitcoinStatus,
       });
       downloadJson(`${base}-bundle.json`, bundle);
+      track('export_performed'); // anonymous count only — the exported bundle stays on-device
       setDone(true);
     } finally {
       setBusy(false);

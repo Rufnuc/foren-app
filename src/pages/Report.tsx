@@ -5,6 +5,7 @@ import { useCase, useEvidence, useAccount, useCommitment, useRefreshBitcoin } fr
 import { buildReport, reportToPdf, type CaseReport } from '@/lib/report';
 import { buildBundle, downloadBlob, downloadJson } from '@/lib/exportBundle';
 import { buildEvidenceZkProof } from '@/lib/zkProver';
+import { track } from '@/usage';
 import { JURISDICTION_LIST, DEFAULT_JURISDICTION, type JurisdictionId } from '@/legal/offences';
 
 // Case report (spec: legally-framed report generation). Assembles the account,
@@ -115,6 +116,7 @@ export function Report() {
       });
       const suffix = privateExport ? '-private' : '';
       downloadJson(`${base}-bundle${suffix}.json`, bundle);
+      track('export_performed'); // anonymous count only — the exported bundle stays on-device
       setZkStatus(null);
     } finally {
       setDownloading(false);
