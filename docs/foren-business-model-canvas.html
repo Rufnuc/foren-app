@@ -1,0 +1,399 @@
+<title>Foren — Business Model Canvas</title>
+<style>
+  :root {
+    --brand-plum: #5B3A5C;
+    --brand-plum-deep: #442B45;
+    --brand-gold: #E8B96D;
+    --brand-off: #F5F0E8;
+
+    /* light theme (default) — warm neutrals biased toward plum */
+    --bg: #EDE6DA;
+    --surface: #FBF8F2;
+    --surface-2: #F4EDE2;
+    --ink: #241E24;
+    --ink-soft: #5F545B;
+    --line: #DDD2C4;
+    --plum-ink: #5B3A5C;
+    --gold-ink: #A9791F;
+    --value-bg: #5B3A5C;
+    --value-ink: #F5F0E8;
+    --value-soft: #D9C6DA;
+    --revenue-tint: #FBF1DE;
+    --shadow: 0 1px 2px rgba(36,30,36,.05), 0 8px 24px rgba(68,43,69,.06);
+
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161217;
+      --surface: #211A23;
+      --surface-2: #2A2130;
+      --ink: #F2ECE3;
+      --ink-soft: #B4A8A6;
+      --line: #382E3B;
+      --plum-ink: #C39EC5;
+      --gold-ink: #E8B96D;
+      --value-bg: #6B4A6D;
+      --value-ink: #F7F1EC;
+      --value-soft: #E4D0E4;
+      --revenue-tint: #2C2418;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.32);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #EDE6DA; --surface: #FBF8F2; --surface-2: #F4EDE2; --ink: #241E24;
+    --ink-soft: #5F545B; --line: #DDD2C4; --plum-ink: #5B3A5C; --gold-ink: #A9791F;
+    --value-bg: #5B3A5C; --value-ink: #F5F0E8; --value-soft: #D9C6DA;
+    --revenue-tint: #FBF1DE; --shadow: 0 1px 2px rgba(36,30,36,.05), 0 8px 24px rgba(68,43,69,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg: #161217; --surface: #211A23; --surface-2: #2A2130; --ink: #F2ECE3;
+    --ink-soft: #B4A8A6; --line: #382E3B; --plum-ink: #C39EC5; --gold-ink: #E8B96D;
+    --value-bg: #6B4A6D; --value-ink: #F7F1EC; --value-soft: #E4D0E4;
+    --revenue-tint: #2C2418; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.32);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .page {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: clamp(20px, 4vw, 48px);
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; }
+
+  /* ---------- Header ---------- */
+  header.masthead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px 32px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .brandline { display: flex; align-items: center; gap: 18px; }
+  .wordmark {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--brand-plum); color: var(--brand-off);
+    font-weight: 800; font-size: 1.5rem; letter-spacing: -0.025em;
+    padding: .42em .62em .58em; border-radius: 16px; position: relative;
+    line-height: 1; flex: none;
+  }
+  .wordmark::after {
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: .32em; width: 46%; height: 3px; border-radius: 2px; background: var(--brand-gold);
+  }
+  .titles h1 {
+    margin: 0; font-size: clamp(1.5rem, 3.4vw, 2.15rem); font-weight: 750;
+    letter-spacing: -0.02em; line-height: 1.05; text-wrap: balance; color: var(--ink);
+  }
+  .titles .lede {
+    margin: 6px 0 0; font-family: var(--serif); font-style: italic;
+    font-size: clamp(.98rem, 1.6vw, 1.12rem); color: var(--ink-soft); max-width: 46ch;
+  }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .chip {
+    font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--plum-ink); background: var(--surface); border: 1px solid var(--line);
+    padding: 5px 10px; border-radius: 999px; white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .chip.solid { background: var(--brand-plum); color: var(--brand-off); border-color: transparent; }
+
+  /* ---------- Canvas grid ---------- */
+  .canvas {
+    display: grid; gap: 12px; margin-top: 22px;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-areas:
+      "kp ka vp cr cs"
+      "kp kr vp ch cs"
+      "cost cost cost rev rev";
+  }
+  .block {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 15px 16px 16px; display: flex; flex-direction: column; gap: 10px;
+    box-shadow: var(--shadow); min-width: 0;
+  }
+  .kp { grid-area: kp; } .ka { grid-area: ka; } .kr { grid-area: kr; }
+  .vp { grid-area: vp; } .cr { grid-area: cr; } .ch { grid-area: ch; }
+  .cs { grid-area: cs; } .cost { grid-area: cost; } .rev { grid-area: rev; }
+
+  .bhead { display: flex; align-items: center; gap: 9px; padding-bottom: 9px; border-bottom: 1px solid var(--line); }
+  .bhead .ic { width: 20px; height: 20px; flex: none; color: var(--plum-ink); }
+  .bhead .ic svg { display: block; width: 100%; height: 100%; }
+  .bhead h2 {
+    margin: 0; font-size: .74rem; font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--ink); line-height: 1.2;
+  }
+  ul.pts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  ul.pts li {
+    position: relative; padding-left: 16px; font-size: .855rem; line-height: 1.42; color: var(--ink);
+  }
+  ul.pts li::before {
+    content: ""; position: absolute; left: 0; top: .5em; width: 6px; height: 6px;
+    border-radius: 2px; background: var(--plum-ink);
+  }
+  ul.pts li b { font-weight: 700; color: var(--ink); }
+  ul.pts li .sub { color: var(--ink-soft); }
+
+  /* Value Propositions — the thesis block */
+  .vp { background: var(--value-bg); border-color: transparent; }
+  .vp .bhead { border-bottom-color: rgba(245,240,232,.22); }
+  .vp .bhead h2, .vp ul.pts li, .vp ul.pts li b { color: var(--value-ink); }
+  .vp .bhead .ic { color: var(--brand-gold); }
+  .vp ul.pts li::before { background: var(--brand-gold); }
+  .vp .kicker {
+    font-family: var(--serif); font-style: italic; color: var(--value-soft);
+    font-size: .92rem; line-height: 1.4; margin: 0;
+  }
+
+  /* Revenue — gold-accented */
+  .rev { background: var(--revenue-tint); border-color: color-mix(in srgb, var(--brand-gold) 45%, var(--line)); }
+  .rev .bhead { border-bottom-color: color-mix(in srgb, var(--brand-gold) 40%, var(--line)); }
+  .rev .bhead .ic { color: var(--gold-ink); }
+  .rev ul.pts li::before { background: var(--gold-ink); }
+
+  /* two-column bullets for the wide bottom blocks */
+  .cost ul.pts { columns: 2; column-gap: 26px; }
+  .cost ul.pts li { break-inside: avoid; }
+
+  /* Revenue — two named paths, side by side */
+  .rev .lanes { display: flex; gap: 22px; }
+  .rev .lane { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .rev .lane-h { margin: 0; font-size: .82rem; font-weight: 750; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .rev .lane-h::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: var(--gold-ink); flex: none; }
+  .rev .lane-note { margin: 0 0 2px; font-family: var(--serif); font-style: italic; font-size: .8rem; color: var(--ink-soft); }
+  .rev .underpin { margin-top: 12px; padding-top: 10px; border-top: 1px dashed color-mix(in srgb, var(--brand-gold) 45%, var(--line)); }
+
+  /* ---------- footnotes ---------- */
+  footer.notes {
+    margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; gap: 10px 28px; align-items: baseline;
+  }
+  footer.notes p { margin: 0; font-size: .8rem; color: var(--ink-soft); max-width: 62ch; }
+  footer.notes .tag {
+    font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; font-weight: 700;
+    color: var(--gold-ink);
+  }
+  footer.notes b { color: var(--ink); font-weight: 700; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1040px) {
+    .canvas {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-areas:
+        "vp vp"
+        "cs cr"
+        "cs ch"
+        "kp ka"
+        "kp kr"
+        "cost cost"
+        "rev rev";
+    }
+    .cost ul.pts { columns: 2; }
+  }
+  @media (max-width: 620px) {
+    .canvas {
+      grid-template-columns: 1fr;
+      grid-template-areas: "vp" "cs" "cr" "ch" "kp" "ka" "kr" "cost" "rev";
+    }
+    .cost ul.pts { columns: 1; }
+    .rev .lanes { flex-direction: column; gap: 14px; }
+    header.masthead { align-items: flex-start; }
+  }
+
+  @media print {
+    .page { background: #fff; padding: 0; }
+    .block { box-shadow: none; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .block { transition: transform .15s ease; }
+  }
+  a:focus-visible, .block:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 2px; }
+</style>
+
+<div class="page">
+  <div class="wrap">
+
+    <header class="masthead">
+      <div class="brandline">
+        <span class="wordmark">foren</span>
+        <div class="titles">
+          <h1>Business Model Canvas</h1>
+          <p class="lede">A private, tamper-evident evidence vault for survivors — and the model that keeps it free for them.</p>
+        </div>
+      </div>
+      <div class="meta">
+        <span class="chip solid">Working draft</span>
+        <span class="chip">20 Jul 2026</span>
+        <span class="chip">Local-first · Zero-knowledge</span>
+      </div>
+    </header>
+
+    <main class="canvas">
+
+      <!-- KEY PARTNERS -->
+      <section class="block kp">
+        <div class="bhead">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="10" r="4.2"/><circle cx="12.5" cy="10" r="4.2"/></svg></span>
+          <h2>Key Partners</h2>
+        </div>
+        <ul class="pts">
+          <li><b>Anti-violence NGOs</b> <span class="sub">— shelters, refuges, DV helplines who reach survivors and recommend the tool</span></li>
+          <li><b>Legal-aid & family law</b> <span class="sub">— clinics, solicitors, and prosecution-support services that use the evidence</span></li>
+          <li><b>Digital-security & human-rights groups</b> <span class="sub">— for audits, threat review, and safe distribution</span></li>
+          <li><b>Timestamping infrastructure</b> <span class="sub">— Solana and Bitcoin / OpenTimestamps for public anchoring</span></li>
+          <li><b>Grant-makers & foundations</b> <span class="sub">— gender-justice, digital-safety, and access-to-justice funders</span></li>
+          <li><b>Academic & forensic partners</b> <span class="sub">— to align with evidentiary standards</span></li>
+        </ul>
+      </section>
+
+      <!-- KEY ACTIVITIES -->
+      <section class="block ka">
+        <div class="bhead">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2.5 5 11h4l-1 6.5L15 8.5h-4z"/></svg></span>
+          <h2>Key Activities</h2>
+        </div>
+        <ul class="pts">
+          <li>Security & product engineering; independent audits</li>
+          <li>Safety design — the game disguise, duress passcode, and panic-wipe</li>
+          <li>Blockchain anchoring & offline verification tooling</li>
+          <li>Trauma-informed UX and safety research</li>
+          <li>Partnership development & grant writing</li>
+        </ul>
+      </section>
+
+      <!-- KEY RESOURCES -->
+      <section class="block kr">
+        <div class="bhead">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.6 17 6.5 10 10.4 3 6.5z"/><path d="M3 10.5 10 14.4 17 10.5"/><path d="M3 13.9 10 17.8 17 13.9"/></svg></span>
+          <h2>Key Resources</h2>
+        </div>
+        <ul class="pts">
+          <li>The crypto stack — on-device AES-256 encryption + Merkle/blockchain anchoring</li>
+          <li>The disguise & duress system (deniability)</li>
+          <li>On-device OCR & speech-to-text models</li>
+          <li>Trust and brand within survivor & advocate networks</li>
+          <li>Team: security, trauma-informed product, DV & legal domain expertise</li>
+        </ul>
+      </section>
+
+      <!-- VALUE PROPOSITIONS -->
+      <section class="block vp">
+        <div class="bhead">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8 10 2.8 16.5 8 10 17.4z"/><path d="M3.5 8h13M10 2.8 8 8l2 9.4L12 8z"/></svg></span>
+          <h2>Value Propositions</h2>
+        </div>
+        <p class="kicker">Evidence a survivor can gather safely, keep private, and later prove was never altered.</p>
+        <ul class="pts">
+          <li><b>Hidden in plain sight</b> — opens as an ordinary puzzle game; a duress passcode shows an empty decoy, so it's safe on a shared or monitored phone.</li>
+          <li><b>Zero-knowledge & local-first</b> — everything is encrypted on the device. No account, no cloud custody; nothing leaves unless the user exports it.</li>
+          <li><b>Tamper-evident proof</b> — each item is hashed and anchored to public blockchains, creating an independently verifiable timestamp that holds up later.</li>
+          <li><b>Makes raw material usable</b> — on-device OCR and transcription turn photos and recordings into searchable, organized case files, fully offline.</li>
+          <li><b>Court-ready exports</b> — structured bundles with proofs that advocates and lawyers can verify offline.</li>
+        </ul>
+      </section>
+
+      <!-- CUSTOMER RELATIONSHIPS -->
+      <section class="block cr">
+        <div class="bhead">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.8h14v8.4h-8l-4 3v-3H3z"/></svg></span>
+          <h2>Customer Relationships</h2>
+        </div>
+        <ul class="pts">
+          <li>Anonymous & self-serve by design — no account builds trust through privacy</li>
+          <li>Support routed through advocates & orgs, not identifiable direct contact</li>
+          <li>In-app safety guidance and help</li>
+          <li>Training, onboarding & documentation for partner organizations</li>
+        </ul>
+      </section>
+
+      <!-- CHANNELS -->
+      <section class="block ch">
+        <div class="bhead">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3 8.5 11.5"/><path d="M17 3l-5.5 14-3-6-6-3z"/></svg></span>
+          <h2>Channels</h2>
+        </div>
+        <ul class="pts">
+          <li>Web app + disguised app-store listing</li>
+          <li>Trusted intermediaries — caseworkers, helplines, legal-aid clinics</li>
+          <li>Advocate & practitioner networks; conferences</li>
+          <li>Word of mouth — <b>never</b> ad-retargeting of survivors</li>
+        </ul>
+      </section>
+
+      <!-- CUSTOMER SEGMENTS -->
+      <section class="block cs">
+        <div class="bhead">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.3" cy="7" r="3"/><path d="M1.8 16.2c0-3 2.6-4.6 5.5-4.6s5.5 1.6 5.5 4.6"/><circle cx="14.3" cy="7.6" r="2.4"/><path d="M13 12c3 0 5.2 1.5 5.2 4.2"/></svg></span>
+          <h2>Customer Segments</h2>
+        </div>
+        <ul class="pts">
+          <li><b>Primary — survivors</b> <span class="sub">documenting domestic abuse, coercive control, stalking, and gender-based violence</span></li>
+          <li><b>Paying — organizations</b> <span class="sub">women's shelters, DV helplines, legal-aid clinics, family-law firms, advocacy groups</span></li>
+          <li><b>Adjacent at-risk users</b> <span class="sub">human-rights defenders, journalists' sources, and others needing deniable, tamper-evident records</span></li>
+        </ul>
+      </section>
+
+      <!-- COST STRUCTURE -->
+      <section class="block cost">
+        <div class="bhead">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.2"/><path d="M10 5.8v8.4M6.8 11l3.2 3.2L13.2 11"/></svg></span>
+          <h2>Cost Structure</h2>
+        </div>
+        <ul class="pts">
+          <li><b>Engineering & security salaries</b> <span class="sub">— the largest line</span></li>
+          <li>Independent security audits & penetration testing</li>
+          <li>Infrastructure — anchoring relay, batched chain fees, hosting</li>
+          <li>Legal & compliance — evidentiary standards, data protection</li>
+          <li>Partnership & training delivery</li>
+          <li>Grant management & operations</li>
+        </ul>
+      </section>
+
+      <!-- REVENUE STREAMS -->
+      <section class="block rev">
+        <div class="bhead">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.2"/><path d="M10 14.2V5.8M6.8 9l3.2-3.2L13.2 9"/></svg></span>
+          <h2>Revenue Streams</h2>
+        </div>
+        <div class="lanes">
+          <div class="lane">
+            <h3 class="lane-h">Organization-sponsored</h3>
+            <p class="lane-note">The org decides who needs it</p>
+            <ul class="pts">
+              <li>NGOs, shelters, legal-aid clinics & law firms buy licenses <span class="sub">(per-seat / per-org, tiered)</span></li>
+              <li>They enrol the survivors they serve — who <b>pay nothing</b></li>
+              <li>Predictable, budget-backed recurring revenue</li>
+            </ul>
+          </div>
+          <div class="lane">
+            <h3 class="lane-h">Direct subscription</h3>
+            <p class="lane-note">For anyone an org doesn't reach</p>
+            <ul class="pts">
+              <li>Individuals subscribe on their own <span class="sub">— no referral or org needed</span></li>
+              <li>Affordable monthly / annual tier; core safety features never paywalled</li>
+              <li>Grant-funded hardship access for those who can't pay</li>
+            </ul>
+          </div>
+        </div>
+        <ul class="pts underpin">
+          <li><b>Underpinned by</b> grants & philanthropy <span class="sub">(DV, digital-safety, access-to-justice)</span>, partner training contracts, and later public-sector pilots</li>
+        </ul>
+      </section>
+
+    </main>
+
+    <footer class="notes">
+      <p><span class="tag">Model</span> &nbsp;<b>Two front doors, no one gated out.</b> Organizations sponsor the survivors they serve, who pay nothing; anyone the org network doesn't reach can subscribe directly, with grant-funded access for those who can't afford it.</p>
+      <p><span class="tag">Note</span> &nbsp;Revenue is the working assumption to validate; every other block reflects what Foren is and does today. Blockchain anchoring and OCR/ASR run on-device or via a self-hosted relay.</p>
+    </footer>
+
+  </div>
+</div>

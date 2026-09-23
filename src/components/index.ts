@@ -1,0 +1,26 @@
+// Component library barrel. See spec Part 5.
+export { LoadingSpinner } from './LoadingSpinner';
+export { SeverityBadge } from './SeverityBadge';
+export { PatternTag } from './PatternTag';
+export { CommitmentStatus } from './CommitmentStatus';
+export { EmptyState } from './EmptyState';
+export { CrisisBanner } from './CrisisBanner';
+export { SafetyExit } from './SafetyExit';
+export { ErrorBoundary } from './ErrorBoundary';
+export { SecureContextGuard } from './SecureContextGuard';
+export { PuzzleSplash } from './PuzzleSplash';
+export { DiscreteKeypad } from './DiscreteKeypad';
+export { PassphraseEntry } from './PassphraseEntry';
+export { GameDisguise } from './GameDisguise';
+export { EvidenceCard } from './EvidenceCard';
+export { TimelineView } from './TimelineView';
+export { Modal } from './Modal';
+export { CaseCard } from './CaseCard';
+export { NewCaseModal } from './NewCaseModal';
+export { EvidenceUploadModal } from './EvidenceUploadModal';
+export { EvidenceDetailModal } from './EvidenceDetailModal';
+export { ChangePasscodeModal } from './ChangePasscodeModal';
+export { RecoveryTestModal } from './RecoveryTestModal';
+export { ExportModal } from './ExportModal';
+export { CommitmentPanel } from './CommitmentPanel';
+export { SettingRow, Toggle, SectionCard } from './SettingsPrimitiveComponents';

@@ -1,0 +1,43 @@
+{
+  "version": "2.0.0",
+  "options": {
+    "env": {
+      "PATH": "/Users/israelegede/.nvm/versions/node/v22.11.0/bin:${env:PATH}"
+    }
+  },
+  "tasks": [
+    {
+      "label": "Foren: dev server",
+      "type": "shell",
+      "command": "npm run dev",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "group": "foren", "panel": "dedicated", "reveal": "always" }
+    },
+    {
+      "label": "Relay: dev (devnet)",
+      "type": "shell",
+      "command": "npx tsx src/index.ts",
+      "isBackground": true,
+      "problemMatcher": [],
+      "options": {
+        "cwd": "/Users/israelegede/Documents/forenlabs-prutet/relay",
+        "env": {
+          "PATH": "/Users/israelegede/.nvm/versions/node/v22.11.0/bin:${env:PATH}",
+          "SOLANA_CLUSTER": "devnet",
+          "RELAY_PORT": "4000",
+          "NODE_ENV": "development",
+          "CORS_ORIGINS": "http://localhost:5173,http://localhost:5174"
+        }
+      },
+      "presentation": { "group": "foren", "panel": "dedicated", "reveal": "always" }
+    },
+    {
+      "label": "Foren: dev + relay",
+      "dependsOn": ["Relay: dev (devnet)", "Foren: dev server"],
+      "dependsOrder": "parallel",
+      "problemMatcher": [],
+      "group": { "kind": "build", "isDefault": true }
+    }
+  ]
+}

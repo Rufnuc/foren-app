@@ -1,0 +1,20 @@
+# Dependencies & build output
+node_modules/
+dist/
+dist-ssr/
+dev-dist/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Capacitor native projects — regenerable from capacitor.config.ts via `npx cap add`.
+# Kept out of the web/PWA repo to stay lean; add back if you version the native builds.
+/android/
+/ios/
+
+# OS / editor
+.DS_Store
+*.local
+*.log

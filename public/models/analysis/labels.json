@@ -1,0 +1,25 @@
+{
+  "tags": [
+    "threat",
+    "physical-violence",
+    "sexual",
+    "stalking",
+    "surveillance",
+    "coercive-control",
+    "intimidation",
+    "harassment",
+    "isolation",
+    "financial-abuse",
+    "contact-breach",
+    "child-related",
+    "manipulation",
+    "degradation"
+  ],
+  "severity": {
+    "1": "low",
+    "2": "medium",
+    "3": "high",
+    "4": "critical"
+  },
+  "usage": "sigmoid(tag_logits) + per-tag threshold; softmax(severity_logits) then argmax (+1)"
+}

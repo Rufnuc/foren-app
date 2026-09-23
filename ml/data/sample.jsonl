@@ -1,0 +1,27 @@
+{"text": "stop texting me, i've asked you before", "lang": "en", "tags": ["harassment", "contact-breach"], "severity": 2, "source": "synthetic"}
+{"text": "i know where you work and i'll be waiting outside", "lang": "en", "tags": ["threat", "stalking", "surveillance"], "severity": 3, "source": "synthetic"}
+{"text": "if you leave me i will kill you", "lang": "en", "tags": ["threat"], "severity": 4, "source": "synthetic"}
+{"text": "you're worthless and no one will ever believe you", "lang": "en", "tags": ["degradation", "manipulation"], "severity": 2, "source": "synthetic"}
+{"text": "you're not allowed to see your sister anymore, i decide who you talk to", "lang": "en", "tags": ["coercive-control", "isolation"], "severity": 2, "source": "synthetic"}
+{"text": "i saw you at the cafe on Bridge Street today", "lang": "en", "tags": ["surveillance", "stalking"], "severity": 3, "source": "synthetic"}
+{"text": "i cancelled your card, you get money when i say so", "lang": "en", "tags": ["financial-abuse", "coercive-control"], "severity": 2, "source": "synthetic"}
+{"text": "if you tell anyone i'll take the kids and you'll never see them", "lang": "en", "tags": ["threat", "child-related", "coercive-control"], "severity": 3, "source": "synthetic"}
+{"text": "can we talk about the kids' schedule for next week", "lang": "en", "tags": [], "severity": 1, "source": "synthetic-benign"}
+{"text": "arrête de m'appeler, je ne veux plus te parler", "lang": "fr", "tags": ["harassment", "contact-breach"], "severity": 2, "source": "synthetic"}
+{"text": "je sais où tu habites et je vais venir", "lang": "fr", "tags": ["threat", "stalking"], "severity": 3, "source": "synthetic"}
+{"text": "si tu me quittes je te retrouverai", "lang": "fr", "tags": ["threat", "intimidation"], "severity": 3, "source": "synthetic"}
+{"text": "tu ne vaux rien sans moi", "lang": "fr", "tags": ["degradation"], "severity": 1, "source": "synthetic"}
+{"text": "deja de escribirme, ya te lo dije", "lang": "es", "tags": ["harassment", "contact-breach"], "severity": 2, "source": "synthetic"}
+{"text": "sé dónde trabajas y voy a ir", "lang": "es", "tags": ["threat", "stalking", "surveillance"], "severity": 3, "source": "synthetic"}
+{"text": "si me dejas te voy a hacer daño", "lang": "es", "tags": ["threat"], "severity": 4, "source": "synthetic"}
+{"text": "no puedes salir sin mi permiso", "lang": "es", "tags": ["coercive-control"], "severity": 2, "source": "synthetic"}
+{"text": "¿puedes enviarme la dirección para recoger a los niños?", "lang": "es", "tags": [], "severity": 1, "source": "synthetic-benign"}
+{"text": "توقف عن الاتصال بي، لا أريد التحدث معك", "lang": "ar", "tags": ["harassment", "contact-breach"], "severity": 2, "source": "synthetic"}
+{"text": "أعرف أين تسكنين وسآتي إليك", "lang": "ar", "tags": ["threat", "stalking"], "severity": 3, "source": "synthetic"}
+{"text": "إذا تركتني سأؤذيك", "lang": "ar", "tags": ["threat"], "severity": 4, "source": "synthetic"}
+{"text": "wallah law sibtini hakhalik tendami", "lang": "ar", "tags": ["threat", "intimidation"], "severity": 3, "source": "synthetic-arabizi"}
+{"text": "ba3rf feen shaghlik w hagy hnak", "lang": "ar", "tags": ["stalking", "surveillance", "threat"], "severity": 3, "source": "synthetic-arabizi"}
+{"text": "paid â ffonio fi eto, dwi wedi dweud wrthot ti", "lang": "cy", "tags": ["harassment", "contact-breach"], "severity": 2, "source": "synthetic"}
+{"text": "dw i'n gwybod ble rwyt ti'n gweithio", "lang": "cy", "tags": ["surveillance", "stalking"], "severity": 3, "source": "synthetic"}
+{"text": "os wnei di adael, mi wna i dy frifo di", "lang": "cy", "tags": ["threat"], "severity": 4, "source": "synthetic"}
+{"text": "ti'n dda i ddim", "lang": "cy", "tags": ["degradation"], "severity": 1, "source": "synthetic"}
