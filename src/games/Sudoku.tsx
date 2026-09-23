@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   generatePuzzle,
   findConflicts,
@@ -8,29 +8,58 @@ import {
   type Puzzle,
   type Difficulty,
 } from './sudoku/sudokuLogic';
+import { loadGame, saveGame, clearGame, recordResult, haptic } from './gameStore';
+import { GameStatsBar } from './GameStatsBar';
 
 const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
+const GAME_ID = 'sudoku';
+interface Saved {
+  difficulty: Difficulty;
+  game: Puzzle;
+  board: number[];
+  notes: number[][];
+}
 
 // Playable Sudoku decoy. Tap a cell then a number, or use the keyboard.
 // Pointer/single-touch only; the unlock gesture lives in the GameDisguise wrapper.
 export function Sudoku() {
-  const [difficulty, setDifficulty] = useState<Difficulty>('easy');
-  const [game, setGame] = useState<Puzzle>(() => generatePuzzle('easy'));
-  const [board, setBoard] = useState<number[]>(() => game.puzzle.slice());
+  const [saved] = useState(() => loadGame<Saved>(GAME_ID));
+  const [difficulty, setDifficulty] = useState<Difficulty>(() => saved?.difficulty ?? 'easy');
+  const [game, setGame] = useState<Puzzle>(() => saved?.game ?? generatePuzzle('easy'));
+  const [board, setBoard] = useState<number[]>(() => saved?.board ?? game.puzzle.slice());
   const [notes, setNotes] = useState<Set<number>[]>(() =>
-    Array.from({ length: 81 }, () => new Set<number>()),
+    saved?.notes
+      ? saved.notes.map((a) => new Set(a))
+      : Array.from({ length: 81 }, () => new Set<number>()),
   );
   const [selected, setSelected] = useState<number | null>(null);
   const [notesMode, setNotesMode] = useState(false);
 
   const conflicts = useMemo(() => findConflicts(board), [board]);
   const solved = useMemo(() => isSolved(board), [board]);
+
+  // Resume across launches (Sets serialise as arrays).
+  useEffect(() => {
+    saveGame<Saved>(GAME_ID, { difficulty, game, board, notes: notes.map((s) => [...s]) });
+  }, [difficulty, game, board, notes]);
+
+  // Record a solve once (not when a solved board is restored).
+  const recorded = useRef(saved ? isSolved(saved.board) : false);
+  useEffect(() => {
+    if (solved && !recorded.current) {
+      recorded.current = true;
+      recordResult(GAME_ID, true);
+      haptic(30);
+    }
+  }, [solved]);
   const remaining = useMemo(() => remainingCounts(board), [board]);
   const peers = useMemo(() => (selected === null ? new Set<number>() : peersOf(selected)), [selected]);
   const selectedValue = selected === null ? 0 : board[selected];
 
   const newGame = (d: Difficulty) => {
     const p = generatePuzzle(d);
+    clearGame(GAME_ID);
+    recorded.current = false;
     setDifficulty(d);
     setGame(p);
     setBoard(p.puzzle.slice());
@@ -41,6 +70,7 @@ export function Sudoku() {
   const inputNumber = useCallback(
     (val: number) => {
       if (selected === null || game.givens[selected]) return;
+      haptic(6);
       if (notesMode && val !== 0) {
         setNotes((prev) => {
           const next = prev.slice();
@@ -200,6 +230,8 @@ export function Sudoku() {
           </div>
         </>
       )}
+
+      <GameStatsBar gameId={GAME_ID} labels={{ won: 'Solved' }} />
     </div>
   );
 }

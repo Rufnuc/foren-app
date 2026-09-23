@@ -3,7 +3,7 @@
 // component props described in Part 2. Kept central so the UI, store, and
 // (eventually) the API layer agree on shapes.
 
-export type GameType = 'game2048' | 'sudoku' | 'wordle';
+export type GameType = 'game2048' | 'sudoku' | 'wordle' | 'minesweeper';
 
 export type RecoveryMethod = 'authenticator' | 'printed' | 'words';
 

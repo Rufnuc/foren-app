@@ -7,6 +7,16 @@ import {
   MAX_GUESSES,
   type LetterState,
 } from './wordle/wordleLogic';
+import { loadGame, saveGame, clearGame, recordResult, haptic } from './gameStore';
+import { GameStatsBar } from './GameStatsBar';
+
+const GAME_ID = 'wordle';
+interface Saved {
+  target: string;
+  guesses: string[];
+  current: string;
+  done: null | 'won' | 'lost';
+}
 
 const ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
 
@@ -19,13 +29,19 @@ const STATE_STYLE: Record<LetterState, { bg: string; fg: string }> = {
 // Playable Wordle decoy. Single-finger / pointer interactions only; the
 // two-finger unlock gesture is handled by the GameDisguise wrapper.
 export function Wordle() {
-  const [target, setTarget] = useState(pickAnswer);
-  const [guesses, setGuesses] = useState<string[]>([]);
-  const [current, setCurrent] = useState('');
-  const [done, setDone] = useState<null | 'won' | 'lost'>(null);
+  const [saved] = useState(() => loadGame<Saved>(GAME_ID));
+  const [target, setTarget] = useState(() => saved?.target ?? pickAnswer());
+  const [guesses, setGuesses] = useState<string[]>(() => saved?.guesses ?? []);
+  const [current, setCurrent] = useState(() => saved?.current ?? '');
+  const [done, setDone] = useState<null | 'won' | 'lost'>(() => saved?.done ?? null);
   const [toast, setToast] = useState<string | null>(null);
   const [shake, setShake] = useState(false);
   const toastTimer = useRef<number>();
+
+  // Resume across launches.
+  useEffect(() => {
+    saveGame<Saved>(GAME_ID, { target, guesses, current, done });
+  }, [target, guesses, current, done]);
 
   const flashToast = useCallback((msg: string) => {
     setToast(msg);
@@ -34,6 +50,7 @@ export function Wordle() {
   }, []);
 
   const reset = () => {
+    clearGame(GAME_ID);
     setTarget(pickAnswer());
     setGuesses([]);
     setCurrent('');
@@ -45,11 +62,13 @@ export function Wordle() {
     if (current.length !== WORD_LENGTH) {
       flashToast('Not enough letters');
       setShake(true);
+      haptic(15);
       return;
     }
     if (!isValidGuess(current)) {
       flashToast('Not in word list');
       setShake(true);
+      haptic(15);
       return;
     }
     const next = [...guesses, current];
@@ -57,9 +76,13 @@ export function Wordle() {
     if (current === target) {
       setDone('won');
       flashToast('Splendid!');
+      recordResult(GAME_ID, true);
+      haptic(30);
     } else if (next.length >= MAX_GUESSES) {
       setDone('lost');
       flashToast(target.toUpperCase());
+      recordResult(GAME_ID, false);
+      haptic(50);
     }
     setCurrent('');
   }, [current, guesses, target, flashToast]);
@@ -206,6 +229,8 @@ export function Wordle() {
           </div>
         ))}
       </div>
+
+      <GameStatsBar gameId={GAME_ID} />
     </div>
   );
 }
