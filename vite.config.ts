@@ -33,6 +33,10 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // The 3.16 MB ZK worker (and other heavy, rarely-used bundles) load on
+        // demand rather than bloating the install — so they're not precached.
+        globIgnores: ['**/*worker*.js'],
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         navigateFallback: 'index.html',
         // Let the large on-device assets be fetched normally, not SPA-rewritten.
         navigateFallbackDenylist: [/^\/models\//, /^\/zk\//],
