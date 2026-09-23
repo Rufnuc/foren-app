@@ -8,6 +8,7 @@ const GAMES: Array<{ id: GameType; name: string; blurb: string; icon: string }> 
   { id: 'game2048', name: '2048', blurb: 'A puzzle game. Slide tiles, combine numbers.', icon: '🔢' },
   { id: 'sudoku', name: 'Sudoku', blurb: 'A number puzzle. Fill in the grid.', icon: '🧩' },
   { id: 'wordle', name: 'Wordle', blurb: 'A word game. Guess the word in 6 tries.', icon: '🔡' },
+  { id: 'minesweeper', name: 'Mines', blurb: 'Clear the field without hitting a mine.', icon: '💣' },
 ];
 
 // Step 1 (spec 1.3): pick the decoy game, then preview it before continuing.

@@ -8,6 +8,17 @@ import {
   type Tile,
   type Direction,
 } from './game2048Logic';
+import { loadGame, saveGame, clearGame, recordResult, haptic } from './gameStore';
+import { GameStatsBar } from './GameStatsBar';
+
+const GAME_ID = 'game2048';
+interface Saved {
+  tiles: Tile[];
+  score: number;
+  over: boolean;
+  won: boolean;
+  keepGoing: boolean;
+}
 
 // Board geometry (px). Board width = SIZE*CELL + (SIZE+1)*GAP.
 const CELL = 70;
@@ -35,13 +46,29 @@ const SWIPE_THRESHOLD = 24;
 const BEST_KEY = 'foren_2048_best';
 
 export function Game2048() {
-  const [tiles, setTiles] = useState<Tile[]>(() => newGame());
-  const [score, setScore] = useState(0);
+  const [saved] = useState(() => loadGame<Saved>(GAME_ID));
+  const [tiles, setTiles] = useState<Tile[]>(() => saved?.tiles ?? newGame());
+  const [score, setScore] = useState(() => saved?.score ?? 0);
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY) ?? 0));
-  const [over, setOver] = useState(false);
-  const [won, setWon] = useState(false);
-  const [keepGoing, setKeepGoing] = useState(false);
+  const [over, setOver] = useState(() => saved?.over ?? false);
+  const [won, setWon] = useState(() => saved?.won ?? false);
+  const [keepGoing, setKeepGoing] = useState(() => saved?.keepGoing ?? false);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  // Resume the board across launches.
+  useEffect(() => {
+    saveGame<Saved>(GAME_ID, { tiles, score, over, won, keepGoing });
+  }, [tiles, score, over, won, keepGoing]);
+
+  // Record the result once, when a game newly ends (not when a finished board
+  // is restored on launch).
+  const recorded = useRef(saved?.over ?? false);
+  useEffect(() => {
+    if (over && !recorded.current) {
+      recorded.current = true;
+      recordResult(GAME_ID, tiles.some((t) => t.value >= 2048));
+    }
+  }, [over, tiles]);
 
   useEffect(() => {
     if (score > best) {
@@ -56,6 +83,7 @@ export function Game2048() {
       setTiles((prev) => {
         const result = move(prev, dir);
         if (!result.moved) return prev;
+        haptic(8);
         if (result.gained) setScore((s) => s + result.gained);
         if (result.won && !keepGoing) setWon(true);
         const withSpawn = addRandomTile(result.tiles);
@@ -104,6 +132,8 @@ export function Game2048() {
   };
 
   const restart = () => {
+    clearGame(GAME_ID);
+    recorded.current = false;
     setTiles(newGame());
     setScore(0);
     setOver(false);
@@ -222,6 +252,8 @@ export function Game2048() {
           New game
         </button>
       </div>
+
+      <GameStatsBar gameId={GAME_ID} labels={{ won: 'Hit 2048' }} />
     </div>
   );
 }

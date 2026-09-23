@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useVaultStore } from '@/store/vaultStore';
 import { useTwoFingerSwipeUp } from '@/hooks/useUnlockGesture';
 import * as attemptGuard from '@/lib/attemptGuard';
-import { DecoyGame } from '@/games/DecoyGame';
+import { GameHub } from '@/games/GameHub';
 import { DiscreteKeypad } from './DiscreteKeypad';
 import { PassphraseEntry } from './PassphraseEntry';
 
@@ -119,7 +119,7 @@ export function GameDisguise() {
         className="absolute left-0 top-0 h-11 w-11 border border-white/5"
       />
 
-      <DecoyGame game={config?.selectedGame ?? 'game2048'} />
+      <GameHub defaultGame={config?.selectedGame ?? 'game2048'} />
 
       {entryOpen &&
         (config?.passcodeKind === 'passphrase' ? (
