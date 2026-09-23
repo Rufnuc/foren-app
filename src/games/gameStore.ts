@@ -102,6 +102,14 @@ export function daySeed(): number {
   return Math.floor((now.getTime() - now.getTimezoneOffset() * 60000) / 86400000);
 }
 
+// Whether today's daily puzzle for a game has been completed.
+export function isDailyDone(gameId: string): boolean {
+  return read<number>(`daily_${gameId}`) === daySeed();
+}
+export function markDailyDone(gameId: string): void {
+  write(`daily_${gameId}`, daySeed());
+}
+
 // A tiny deterministic PRNG (mulberry32) for daily puzzles.
 export function seededRandom(seed: number): () => number {
   let a = seed >>> 0;

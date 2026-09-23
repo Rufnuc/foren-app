@@ -1,17 +1,30 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   pickAnswer,
+  dailyAnswer,
   evaluateGuess,
   isValidGuess,
   WORD_LENGTH,
   MAX_GUESSES,
   type LetterState,
 } from './wordle/wordleLogic';
-import { loadGame, saveGame, clearGame, recordResult, haptic } from './gameStore';
+import {
+  loadGame,
+  saveGame,
+  clearGame,
+  recordResult,
+  haptic,
+  daySeed,
+  isDailyDone,
+  markDailyDone,
+} from './gameStore';
 import { GameStatsBar } from './GameStatsBar';
 
 const GAME_ID = 'wordle';
+type Mode = 'daily' | 'free';
 interface Saved {
+  mode: Mode;
+  seed: number;
   target: string;
   guesses: string[];
   current: string;
@@ -29,8 +42,17 @@ const STATE_STYLE: Record<LetterState, { bg: string; fg: string }> = {
 // Playable Wordle decoy. Single-finger / pointer interactions only; the
 // two-finger unlock gesture is handled by the GameDisguise wrapper.
 export function Wordle() {
-  const [saved] = useState(() => loadGame<Saved>(GAME_ID));
-  const [target, setTarget] = useState(() => saved?.target ?? pickAnswer());
+  // Restore a valid saved game: a free game, or today's daily (not a stale one).
+  const [saved] = useState(() => {
+    const s = loadGame<Saved>(GAME_ID);
+    if (s && (s.mode === 'free' || (s.mode === 'daily' && s.seed === daySeed()))) return s;
+    return null;
+  });
+  const [mode, setMode] = useState<Mode>(() => saved?.mode ?? (isDailyDone(GAME_ID) ? 'free' : 'daily'));
+  const [seed, setSeed] = useState(() => saved?.seed ?? (mode === 'daily' ? daySeed() : 0));
+  const [target, setTarget] = useState(() =>
+    saved?.target ?? (mode === 'daily' ? dailyAnswer(daySeed()) : pickAnswer()),
+  );
   const [guesses, setGuesses] = useState<string[]>(() => saved?.guesses ?? []);
   const [current, setCurrent] = useState(() => saved?.current ?? '');
   const [done, setDone] = useState<null | 'won' | 'lost'>(() => saved?.done ?? null);
@@ -40,8 +62,8 @@ export function Wordle() {
 
   // Resume across launches.
   useEffect(() => {
-    saveGame<Saved>(GAME_ID, { target, guesses, current, done });
-  }, [target, guesses, current, done]);
+    saveGame<Saved>(GAME_ID, { mode, seed, target, guesses, current, done });
+  }, [mode, seed, target, guesses, current, done]);
 
   const flashToast = useCallback((msg: string) => {
     setToast(msg);
@@ -49,14 +71,20 @@ export function Wordle() {
     toastTimer.current = window.setTimeout(() => setToast(null), 1400);
   }, []);
 
-  const reset = () => {
+  const startMode = (m: Mode) => {
     clearGame(GAME_ID);
-    setTarget(pickAnswer());
+    setMode(m);
+    const sd = m === 'daily' ? daySeed() : 0;
+    setSeed(sd);
+    setTarget(m === 'daily' ? dailyAnswer(sd) : pickAnswer());
     setGuesses([]);
     setCurrent('');
     setDone(null);
     setToast(null);
   };
+
+  // "New game": daily can't be replayed, so it moves to a fresh practice word.
+  const reset = () => startMode('free');
 
   const submit = useCallback(() => {
     if (current.length !== WORD_LENGTH) {
@@ -77,15 +105,17 @@ export function Wordle() {
       setDone('won');
       flashToast('Splendid!');
       recordResult(GAME_ID, true, { guesses: next.length });
+      if (mode === 'daily') markDailyDone(GAME_ID);
       haptic(30);
     } else if (next.length >= MAX_GUESSES) {
       setDone('lost');
       flashToast(target.toUpperCase());
       recordResult(GAME_ID, false);
+      if (mode === 'daily') markDailyDone(GAME_ID);
       haptic(50);
     }
     setCurrent('');
-  }, [current, guesses, target, flashToast]);
+  }, [current, guesses, target, mode, flashToast]);
 
   const press = useCallback(
     (key: string) => {
@@ -129,6 +159,23 @@ export function Wordle() {
       `}</style>
 
       <h1 className="text-2xl font-bold tracking-widest text-gold">WORDLE</h1>
+
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          onClick={() => startMode('daily')}
+          className={`rounded px-3 py-1 text-xs font-semibold ${mode === 'daily' ? 'bg-plum text-primary' : 'bg-surface text-secondary'}`}
+        >
+          Daily{isDailyDone(GAME_ID) ? ' ✓' : ''}
+        </button>
+        <button
+          type="button"
+          onClick={() => startMode('free')}
+          className={`rounded px-3 py-1 text-xs font-semibold ${mode === 'free' ? 'bg-plum text-primary' : 'bg-surface text-secondary'}`}
+        >
+          Practice
+        </button>
+      </div>
 
       {toast && (
         <div className="absolute top-10 z-20 rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-background shadow-lg">
@@ -182,10 +229,14 @@ export function Wordle() {
       {done && (
         <div className="flex flex-col items-center gap-2">
           <p className="text-sm text-primary">
-            {done === 'won' ? 'Nice!' : `The word was ${target.toUpperCase()}`}
+            {done === 'won'
+              ? mode === 'daily'
+                ? 'Nice — today’s puzzle done!'
+                : 'Nice!'
+              : `The word was ${target.toUpperCase()}`}
           </p>
           <button type="button" onClick={reset} className="btn-primary">
-            New game
+            {mode === 'daily' ? 'Practice word' : 'New game'}
           </button>
         </div>
       )}
@@ -210,7 +261,7 @@ export function Wordle() {
                   key={ch}
                   type="button"
                   onClick={() => press(ch)}
-                  className="h-11 w-7 rounded text-sm font-semibold uppercase"
+                  className="h-12 w-8 rounded text-sm font-semibold uppercase"
                   style={{ backgroundColor: style.bg, color: style.fg }}
                 >
                   {ch}

@@ -132,7 +132,7 @@ export function Minesweeper() {
   };
 
   const mines = useMemo(() => remainingMines(board, cfg), [board, cfg]);
-  const cell = Math.min(34, Math.floor(330 / cfg.cols));
+  const cell = Math.min(36, Math.floor(340 / cfg.cols));
 
   return (
     <div className="flex flex-col items-center gap-3 select-none">
