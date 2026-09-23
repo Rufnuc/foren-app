@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+runs/
+*.onnx
+*.pt
+*.bin
+# Track the sample only; real datasets stay off git (they may contain sensitive text).
+data/*.jsonl
+!data/sample.jsonl

@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-primary font-sans antialiased;
+    margin: 0;
+    /* Avoid rubber-band overscroll revealing layers under the disguise */
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  /* App is mobile-first: a centered phone-width column on larger screens. */
+  .app-shell {
+    @apply mx-auto flex min-h-full w-full max-w-app flex-col;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-base font-semibold
+           transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold
+           disabled:cursor-not-allowed disabled:opacity-50;
+    min-height: 48px;
+  }
+
+  .btn-primary {
+    @apply btn bg-plum text-primary hover:bg-plum/90;
+  }
+
+  .btn-secondary {
+    @apply btn border border-gold/60 text-gold hover:bg-gold/10;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger text-primary hover:bg-danger/90;
+  }
+
+  .card {
+    @apply rounded-2xl bg-surface p-4;
+  }
+}
