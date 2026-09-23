@@ -8,12 +8,24 @@ import {
   type Puzzle,
   type Difficulty,
 } from './sudoku/sudokuLogic';
-import { loadGame, saveGame, clearGame, recordResult, haptic } from './gameStore';
+import {
+  loadGame,
+  saveGame,
+  clearGame,
+  recordResult,
+  haptic,
+  daySeed,
+  seededRandom,
+  isDailyDone,
+  markDailyDone,
+} from './gameStore';
 import { GameStatsBar } from './GameStatsBar';
 
 const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
 const GAME_ID = 'sudoku';
+type Mode = 'daily' | 'free';
 interface Saved {
+  mode: Mode;
   difficulty: Difficulty;
   game: Puzzle;
   board: number[];
@@ -24,6 +36,7 @@ interface Saved {
 // Pointer/single-touch only; the unlock gesture lives in the GameDisguise wrapper.
 export function Sudoku() {
   const [saved] = useState(() => loadGame<Saved>(GAME_ID));
+  const [mode, setMode] = useState<Mode>(() => saved?.mode ?? 'free');
   const [difficulty, setDifficulty] = useState<Difficulty>(() => saved?.difficulty ?? 'easy');
   const [game, setGame] = useState<Puzzle>(() => saved?.game ?? generatePuzzle('easy'));
   const [board, setBoard] = useState<number[]>(() => saved?.board ?? game.puzzle.slice());
@@ -40,8 +53,8 @@ export function Sudoku() {
 
   // Resume across launches (Sets serialise as arrays).
   useEffect(() => {
-    saveGame<Saved>(GAME_ID, { difficulty, game, board, notes: notes.map((s) => [...s]) });
-  }, [difficulty, game, board, notes]);
+    saveGame<Saved>(GAME_ID, { mode, difficulty, game, board, notes: notes.map((s) => [...s]) });
+  }, [mode, difficulty, game, board, notes]);
 
   // Record a solve once (not when a solved board is restored).
   const recorded = useRef(saved ? isSolved(saved.board) : false);
@@ -49,23 +62,27 @@ export function Sudoku() {
     if (solved && !recorded.current) {
       recorded.current = true;
       recordResult(GAME_ID, true);
+      if (mode === 'daily') markDailyDone(GAME_ID);
       haptic(30);
     }
-  }, [solved]);
+  }, [solved, mode]);
   const remaining = useMemo(() => remainingCounts(board), [board]);
   const peers = useMemo(() => (selected === null ? new Set<number>() : peersOf(selected)), [selected]);
   const selectedValue = selected === null ? 0 : board[selected];
 
-  const newGame = (d: Difficulty) => {
-    const p = generatePuzzle(d);
+  const loadBoard = (p: Puzzle, m: Mode, d: Difficulty) => {
     clearGame(GAME_ID);
     recorded.current = false;
+    setMode(m);
     setDifficulty(d);
     setGame(p);
     setBoard(p.puzzle.slice());
     setNotes(Array.from({ length: 81 }, () => new Set<number>()));
     setSelected(null);
   };
+  const newGame = (d: Difficulty) => loadBoard(generatePuzzle(d), 'free', d);
+  // Deterministic daily puzzle (same for everyone that day).
+  const newDaily = () => loadBoard(generatePuzzle('medium', seededRandom(daySeed())), 'daily', 'medium');
 
   const inputNumber = useCallback(
     (val: number) => {
@@ -121,16 +138,25 @@ export function Sudoku() {
 
   return (
     <div className="flex flex-col items-center gap-3 select-none">
-      <div className="flex w-full max-w-[330px] items-center justify-between">
+      <div className="flex w-full max-w-[360px] items-center justify-between">
         <h1 className="text-2xl font-bold tracking-widest text-gold">SUDOKU</h1>
         <div className="flex gap-1">
+          <button
+            type="button"
+            onClick={newDaily}
+            className={`rounded px-2 py-1 text-[11px] font-semibold ${
+              mode === 'daily' ? 'bg-plum text-primary' : 'bg-surface text-secondary'
+            }`}
+          >
+            Daily{isDailyDone(GAME_ID) ? ' ✓' : ''}
+          </button>
           {DIFFICULTIES.map((d) => (
             <button
               key={d}
               type="button"
               onClick={() => newGame(d)}
               className={`rounded px-2 py-1 text-[11px] font-semibold capitalize ${
-                d === difficulty ? 'bg-plum text-primary' : 'bg-surface text-secondary'
+                mode === 'free' && d === difficulty ? 'bg-plum text-primary' : 'bg-surface text-secondary'
               }`}
             >
               {d}
@@ -163,7 +189,7 @@ export function Sudoku() {
               key={i}
               type="button"
               onClick={() => setSelected(i)}
-              className="flex h-9 w-9 items-center justify-center text-lg font-semibold"
+              className="flex h-10 w-10 items-center justify-center text-lg font-semibold"
               style={{
                 backgroundColor: bg,
                 color,
@@ -200,7 +226,7 @@ export function Sudoku() {
       ) : (
         <>
           {/* Number pad with remaining counts */}
-          <div className="grid grid-cols-9 gap-1" style={{ width: 330 }}>
+          <div className="grid grid-cols-9 gap-1" style={{ width: 360 }}>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => {
               const done = remaining[n] <= 0;
               return (
@@ -220,7 +246,7 @@ export function Sudoku() {
           </div>
 
           {/* Controls */}
-          <div className="flex gap-2" style={{ width: 330 }}>
+          <div className="flex gap-2" style={{ width: 360 }}>
             <ControlButton onClick={() => inputNumber(0)}>Erase</ControlButton>
             <ControlButton onClick={() => setNotesMode((v) => !v)} active={notesMode}>
               Notes {notesMode ? 'On' : 'Off'}

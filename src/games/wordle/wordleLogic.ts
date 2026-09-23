@@ -14,6 +14,12 @@ export function pickAnswer(): string {
   return ANSWERS[Math.floor(Math.random() * ANSWERS.length)];
 }
 
+/** Deterministic word for a given day seed — same for everyone that day. */
+export function dailyAnswer(seed: number): string {
+  const i = ((seed % ANSWERS.length) + ANSWERS.length) % ANSWERS.length;
+  return ANSWERS[i];
+}
+
 /** A guess is valid if it's the right length and a known word. */
 export function isValidGuess(word: string): boolean {
   return word.length === WORD_LENGTH && ALLOWED.has(word.toLowerCase());

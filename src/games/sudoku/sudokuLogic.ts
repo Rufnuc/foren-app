@@ -14,10 +14,12 @@ const HOLES: Record<Difficulty, number> = {
   hard: 54,
 };
 
-function shuffle<T>(arr: T[]): T[] {
+type RNG = () => number;
+
+function shuffle<T>(arr: T[], rng: RNG = Math.random): T[] {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rng() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
@@ -41,13 +43,13 @@ export function canPlace(g: Grid, idx: number, val: number): boolean {
 }
 
 /** Fill a grid completely via randomized backtracking. */
-function fillSolution(g: Grid): boolean {
+function fillSolution(g: Grid, rng: RNG = Math.random): boolean {
   const idx = g.indexOf(0);
   if (idx === -1) return true;
-  for (const val of shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9])) {
+  for (const val of shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9], rng)) {
     if (canPlace(g, idx, val)) {
       g[idx] = val;
-      if (fillSolution(g)) return true;
+      if (fillSolution(g, rng)) return true;
       g[idx] = 0;
     }
   }
@@ -83,14 +85,14 @@ export interface Puzzle {
  * ambiguous. The final hole count may fall a little short of the target when
  * uniqueness blocks further digging; the puzzle is always valid either way.
  */
-export function generatePuzzle(difficulty: Difficulty = 'medium'): Puzzle {
+export function generatePuzzle(difficulty: Difficulty = 'medium', rng: RNG = Math.random): Puzzle {
   const solution: Grid = Array(81).fill(0);
-  fillSolution(solution);
+  fillSolution(solution, rng);
 
   const puzzle = solution.slice();
   const target = HOLES[difficulty];
   let holes = 0;
-  for (const cell of shuffle([...Array(81).keys()])) {
+  for (const cell of shuffle([...Array(81).keys()], rng)) {
     if (holes >= target) break;
     const saved = puzzle[cell];
     puzzle[cell] = 0;
