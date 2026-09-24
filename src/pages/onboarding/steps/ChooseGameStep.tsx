@@ -20,7 +20,7 @@ export function ChooseGameStep({ draft, update, onNext }: StepProps) {
     return (
       <WizardLayout
         step={1}
-        total={6}
+        total={7}
         title={`You picked ${GAMES.find((g) => g.id === selected)?.name}`}
         subtitle="This is what someone will see if they look at your phone. Have a quick play."
         onBack={() => setConfirming(false)}
@@ -43,7 +43,7 @@ export function ChooseGameStep({ draft, update, onNext }: StepProps) {
   }
 
   return (
-    <WizardLayout step={1} total={6} title="Choose your disguise" subtitle="Pick a game to hide your vault.">
+    <WizardLayout step={1} total={7} title="Choose your disguise" subtitle="Pick a game to hide your vault.">
       <div className="flex flex-col gap-3">
         {GAMES.map((g) => (
           <button

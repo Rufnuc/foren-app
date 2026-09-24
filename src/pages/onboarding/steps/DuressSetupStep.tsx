@@ -31,7 +31,7 @@ export function DuressSetupStep({ draft, update, onNext, onBack }: StepProps) {
   return (
     <WizardLayout
       step={5}
-      total={6}
+      total={7}
       title="Set up a duress code (optional)"
       subtitle="If someone forces you to unlock, this code shows a safe decoy instead of your real vault."
       onBack={onBack}

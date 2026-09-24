@@ -107,7 +107,8 @@ export function GameDisguise() {
       ref={containerRef}
       className="relative flex h-full min-h-screen w-full flex-col items-center justify-center bg-background"
     >
-      {/* Discreet corner activator: nearly invisible, 1px border, 44px target. */}
+      {/* Discreet corner activator: fully invisible (no border), 44px target,
+          in the TOP-RIGHT corner. Double-tap here to reach the unlock entry. */}
       <button
         type="button"
         aria-label="Menu"
@@ -116,7 +117,7 @@ export function GameDisguise() {
         onPointerDown={startPress}
         onPointerUp={cancelPress}
         onPointerLeave={cancelPress}
-        className="absolute left-0 top-0 h-11 w-11 border border-white/5"
+        className="absolute right-0 top-0 h-11 w-11 bg-transparent"
       />
 
       <GameHub defaultGame={config?.selectedGame ?? 'game2048'} />

@@ -58,7 +58,7 @@ export function FirstUnlockStep({ draft, onBack }: StepProps) {
         onPointerDown={startPress}
         onPointerUp={cancelPress}
         onPointerLeave={cancelPress}
-        className="absolute left-0 top-0 h-11 w-11 border border-white/5"
+        className="absolute right-0 top-0 h-11 w-11 bg-transparent"
       />
       <button type="button" onClick={onBack} className="absolute left-4 top-4 text-sm text-gold">
         ← Back
@@ -67,7 +67,7 @@ export function FirstUnlockStep({ draft, onBack }: StepProps) {
       <div className="text-center">
         <h1 className="text-xl font-semibold text-primary">You’re ready!</h1>
         <p className="mt-1 text-sm text-secondary">
-          Draw your symbol (or double-tap the top-left corner), then enter your code.
+          Draw your symbol (or double-tap the top-right corner), then enter your code.
         </p>
       </div>
 

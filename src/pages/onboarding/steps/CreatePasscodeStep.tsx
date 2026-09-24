@@ -60,7 +60,7 @@ export function CreatePasscodeStep({ draft, update, onNext, onBack }: StepProps)
   return (
     <WizardLayout
       step={2}
-      total={6}
+      total={7}
       title="Create a code to unlock your vault"
       subtitle={subtitle}
       onBack={onBack}
