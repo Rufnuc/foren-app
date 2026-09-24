@@ -12,8 +12,11 @@ export default defineConfig({
     // never "Foren". The heavy on-device assets (the AI model, the ZK artifacts)
     // are NOT precached; they load on demand.
     VitePWA({
-      registerType: 'autoUpdate',
-      injectRegister: 'auto',
+      // 'prompt' (not autoUpdate) so a new version never force-reloads mid-use
+      // and loses in-progress input. We register + apply it ourselves at a safe
+      // moment (app backgrounded / cold start) — see src/lib/pwaUpdate.ts.
+      registerType: 'prompt',
+      injectRegister: false,
       includeAssets: ['favicon-32x32.png', 'apple-touch-icon.png', 'icon.svg'],
       manifest: {
         name: 'Puzzle',
@@ -40,6 +43,10 @@ export default defineConfig({
         navigateFallback: 'index.html',
         // Let the large on-device assets be fetched normally, not SPA-rewritten.
         navigateFallbackDenylist: [/^\/models\//, /^\/zk\//],
+        // Take control immediately on activation and purge stale precaches, so
+        // an updated app never keeps serving old cached assets.
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
       },
     }),
   ],
