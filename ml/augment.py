@@ -29,6 +29,18 @@ WORD_SUBS = {
 # threatening and benign — appended to some rows so emoji isn't a tag signal).
 EMOJI = ["😡", "🔪", "😤", "👀", "📍", "🙄", "😊", "🙏", "❤️", "😂", "😅", "🤬", "💔", "🥺", "‼️"]
 
+# British texting register. LABEL-SAFE only: these change style, not meaning
+# (an address term / intensifier / tag / dropped g), so a threat stays a threat
+# and benign stays benign. This is the UK-slang layer — the app's prime market
+# is the UK, but public training data (civil_comments) is American-skewed.
+BRITISH_SUBS = {
+    "you": "ya", "your": "ya", "brother": "bruv", "friend": "mate", "friends": "mates",
+    "very": "proper", "really": "proper", "yes": "yeah", "nothing": "nowt",
+    "isn't it": "innit", "not going to": "ain't gonna", "going": "goin", "nothing at all": "nowt",
+}
+# Discourse tags appended to some messages (register markers, meaning-neutral).
+BRITISH_TAGS = ["innit", "mate", "yeah", "yeah?", "tbh", "ngl", "ya get me", "swear down", "bruv", "init"]
+
 
 def drop_apostrophes(s: str, rng: random.Random) -> str:
     return s.replace("'", "") if rng.random() < 0.6 else s
@@ -80,25 +92,55 @@ def noisify(text: str, lang: str, rng: random.Random) -> str:
     return s.strip()
 
 
+def britishify(text: str, rng: random.Random) -> str:
+    """Restyle English text into British texting register (label-preserving)."""
+    out = text
+    for k, v in BRITISH_SUBS.items():
+        if " " in k and k in out and rng.random() < 0.6:
+            out = out.replace(k, v)
+    tokens = out.split(" ")
+    for i, tok in enumerate(tokens):
+        low = tok.lower()
+        if low in BRITISH_SUBS and rng.random() < 0.45:
+            tokens[i] = BRITISH_SUBS[low]
+        elif low.endswith("ing") and len(low) > 4 and rng.random() < 0.4:  # droppin' g's
+            tokens[i] = tok[:-1]
+    out = " ".join(tokens)
+    out = drop_apostrophes(out, rng)
+    if rng.random() < 0.45:  # append a British tag
+        out = f"{out} {rng.choice(BRITISH_TAGS)}"
+    if rng.random() < 0.25:
+        out = f"{out} {rng.choice(EMOJI)}"
+    return out.strip()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--per-row", type=int, default=1, help="noisy variants to emit per source row")
+    ap.add_argument("--british-per-row", type=int, default=1, help="British-register variants per English row")
     ap.add_argument("--seed", type=int, default=7)
     args = ap.parse_args()
 
     rng = random.Random(args.seed)
     rows = [json.loads(l) for l in open(args.data, encoding="utf-8") if l.strip()]
     out, seen = [], set()
+
+    def emit(row, text, tag):
+        key = (row.get("lang"), text.lower())
+        if not text or text == row["text"] or key in seen:
+            return
+        seen.add(key)
+        out.append({**row, "text": text, "source": (row.get("source", "") + tag).lstrip("+")})
+
     for r in rows:
         for _ in range(args.per_row):
-            noisy = noisify(r["text"], r.get("lang", "en"), rng)
-            key = (r.get("lang"), noisy.lower())
-            if not noisy or noisy == r["text"] or key in seen:
-                continue
-            seen.add(key)
-            out.append({**r, "text": noisy, "source": (r.get("source", "") + "+aug").lstrip("+")})
+            emit(r, noisify(r["text"], r.get("lang", "en"), rng), "+aug")
+        # British register only makes sense for English source rows.
+        if r.get("lang") == "en":
+            for _ in range(args.british_per_row):
+                emit(r, britishify(r["text"], rng), "+uk")
 
     with open(args.out, "w", encoding="utf-8") as f:
         for r in out:
