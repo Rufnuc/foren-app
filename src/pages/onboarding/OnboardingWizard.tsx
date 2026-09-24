@@ -5,6 +5,7 @@ import { CreatePasscodeStep } from './steps/CreatePasscodeStep';
 import { RecoverySetupStep } from './steps/RecoverySetupStep';
 import { RecoveryDryRunStep } from './steps/RecoveryDryRunStep';
 import { DuressSetupStep } from './steps/DuressSetupStep';
+import { AddToHomeStep } from './steps/AddToHomeStep';
 import { FirstUnlockStep } from './steps/FirstUnlockStep';
 
 const INITIAL_DRAFT: WizardDraft = {
@@ -22,10 +23,11 @@ const STEPS = [
   RecoverySetupStep,
   RecoveryDryRunStep,
   DuressSetupStep,
+  AddToHomeStep,
   FirstUnlockStep,
 ];
 
-// Orchestrates the 6-step onboarding (spec Part 1). Choices accumulate in a
+// Orchestrates the 7-step onboarding (spec Part 1). Choices accumulate in a
 // draft and are committed atomically at the final first-unlock step.
 export function OnboardingWizard() {
   const [step, setStep] = useState(0);

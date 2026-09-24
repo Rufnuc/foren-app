@@ -18,7 +18,7 @@ export function RecoveryDryRunStep({ draft, onNext, onBack }: StepProps) {
   if (!recovery) {
     // Shouldn't happen (step 3 sets it); guard for type-safety.
     return (
-      <WizardLayout step={4} total={6} title="Test your recovery" onBack={onBack}>
+      <WizardLayout step={4} total={7} title="Test your recovery" onBack={onBack}>
         <p className="text-sm text-danger">No recovery method set. Go back a step.</p>
       </WizardLayout>
     );
@@ -48,7 +48,7 @@ export function RecoveryDryRunStep({ draft, onNext, onBack }: StepProps) {
         : 'Enter the recovery code from your card.';
 
   return (
-    <WizardLayout step={4} total={6} title="Test your recovery" subtitle={subtitle} onBack={onBack}>
+    <WizardLayout step={4} total={7} title="Test your recovery" subtitle={subtitle} onBack={onBack}>
       {recovery.method === 'authenticator' && (
         <input
           inputMode="numeric"

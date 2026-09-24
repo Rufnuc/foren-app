@@ -65,7 +65,7 @@ export function RecoverySetupStep({ update, onNext, onBack }: StepProps) {
     return (
       <WizardLayout
         step={3}
-        total={6}
+        total={7}
         title="Set up recovery"
         subtitle="If you lose your device, you can recover your vault with this."
         onBack={onBack}
@@ -94,7 +94,7 @@ export function RecoverySetupStep({ update, onNext, onBack }: StepProps) {
   return (
     <WizardLayout
       step={3}
-      total={6}
+      total={7}
       title={METHODS.find((m) => m.id === method)!.title}
       subtitle="Save this now — you’ll confirm it on the next step."
       onBack={() => setMethod(null)}
