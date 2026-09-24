@@ -149,6 +149,30 @@ ROWS = [
     ("en", ["coercive-control"], 2, "no vas a ningun lado without asking me first"),
     ("en", ["surveillance"], 2, "i saw ur location, kont fen? who were u with"),  # en+arabizi
     ("en", [], 1, "ok habibi see u at 6, dont forget the milk 🥛"),  # benign code-switch
+
+    # ── UK / British slang register (the app's prime market) ──────────────────
+    ("en", ["threat", "physical-violence"], 4, "ur getting battered when i get in, swear down"),
+    ("en", ["physical-violence"], 3, "ill do you in if u carry on mate"),
+    ("en", ["threat"], 3, "ur a dead man walking, watch urself yeah"),
+    ("en", ["physical-violence", "threat"], 3, "ill sort u out proper when im home"),
+    ("en", ["threat"], 3, "keep chattin and see wat happens to u bruv"),
+    ("en", ["degradation"], 1, "ur a proper mug, no one wants u u melt"),
+    ("en", ["degradation", "manipulation"], 2, "ur doin my head in, its ur fault i kick off innit"),
+    ("en", ["coercive-control", "isolation"], 2, "ur not going out with them lot, allow it"),
+    ("en", ["coercive-control"], 2, "u dont go nowhere without askin me first, u get me"),
+    ("en", ["surveillance"], 2, "i can see ur location, who u with rn"),
+    ("en", ["intimidation"], 2, "dont make me come over there, u dont wanna see me kick off"),
+    ("en", ["financial-abuse"], 2, "give us ur wages friday, u dont need ur own account"),
+    ("en", ["contact-breach", "harassment"], 2, "answer ur phone rn, ive rung u like 20 times man"),
+    ("en", ["child-related", "threat"], 3, "ill make sure u never see the kids again, mark my words"),
+    # British BENIGN — must NOT fire (imperative / affectionate chat with slang)
+    ("en", [], 1, "u alright mate? fancy a cheeky nandos later"),
+    ("en", [], 1, "can u grab some tea bags n milk on ur way home ta"),
+    ("en", [], 1, "runnin proper late, traffic is doing my head in lol"),
+    ("en", [], 1, "made us laugh so much today, love ya loads x"),
+    ("en", [], 1, "u free sat? thinkin we pop round ur mums for a brew"),
+    ("en", [], 1, "sound, see u at the pub at 8 yeah"),
+    ("en", [], 1, "the little one was proper cheeky at school today bless"),
 ]
 
 

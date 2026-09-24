@@ -95,3 +95,24 @@
 {"text": "no vas a ningun lado without asking me first", "lang": "en", "tags": ["coercive-control"], "severity": 2, "source": "gold-eval-draft"}
 {"text": "i saw ur location, kont fen? who were u with", "lang": "en", "tags": ["surveillance"], "severity": 2, "source": "gold-eval-draft"}
 {"text": "ok habibi see u at 6, dont forget the milk 🥛", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "ur getting battered when i get in, swear down", "lang": "en", "tags": ["threat", "physical-violence"], "severity": 4, "source": "gold-eval-draft"}
+{"text": "ill do you in if u carry on mate", "lang": "en", "tags": ["physical-violence"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "ur a dead man walking, watch urself yeah", "lang": "en", "tags": ["threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "ill sort u out proper when im home", "lang": "en", "tags": ["physical-violence", "threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "keep chattin and see wat happens to u bruv", "lang": "en", "tags": ["threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "ur a proper mug, no one wants u u melt", "lang": "en", "tags": ["degradation"], "severity": 1, "source": "gold-eval-draft"}
+{"text": "ur doin my head in, its ur fault i kick off innit", "lang": "en", "tags": ["degradation", "manipulation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "ur not going out with them lot, allow it", "lang": "en", "tags": ["coercive-control", "isolation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "u dont go nowhere without askin me first, u get me", "lang": "en", "tags": ["coercive-control"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "i can see ur location, who u with rn", "lang": "en", "tags": ["surveillance"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "dont make me come over there, u dont wanna see me kick off", "lang": "en", "tags": ["intimidation"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "give us ur wages friday, u dont need ur own account", "lang": "en", "tags": ["financial-abuse"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "answer ur phone rn, ive rung u like 20 times man", "lang": "en", "tags": ["contact-breach", "harassment"], "severity": 2, "source": "gold-eval-draft"}
+{"text": "ill make sure u never see the kids again, mark my words", "lang": "en", "tags": ["child-related", "threat"], "severity": 3, "source": "gold-eval-draft"}
+{"text": "u alright mate? fancy a cheeky nandos later", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "can u grab some tea bags n milk on ur way home ta", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "runnin proper late, traffic is doing my head in lol", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "made us laugh so much today, love ya loads x", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "u free sat? thinkin we pop round ur mums for a brew", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "sound, see u at the pub at 8 yeah", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
+{"text": "the little one was proper cheeky at school today bless", "lang": "en", "tags": [], "severity": 1, "source": "gold-eval-draft"}
