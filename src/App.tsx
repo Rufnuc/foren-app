@@ -7,6 +7,7 @@ import { ErrorBoundary, SecureContextGuard, PuzzleSplash } from '@/components';
 import { useVaultStore } from '@/store/vaultStore';
 import { initUsage } from '@/usage';
 import { syncHostedBackup } from '@/lib/hostedBackup';
+import { maybeRedeemInboundReferral } from '@/lib/referral';
 
 // Minimum time the "Puzzle" game-intro splash stays up, so a fast init still
 // looks like a game booting rather than a flicker.
@@ -31,7 +32,12 @@ function Boot({ children }: { children: ReactNode }) {
   // and flush any counters pending from a previous session. Best-effort and
   // fully isolated from the vault — see src/usage/.
   useEffect(() => {
-    if (initialized) void initUsage();
+    if (initialized) {
+      void initUsage();
+      // If opened from a "Help a friend" link, redeem it once (anonymous, and
+      // the code is stripped from the URL immediately). Best-effort.
+      void maybeRedeemInboundReferral();
+    }
   }, [initialized]);
 
   // When the app is sent to the background, push any vault changes to the hosted
