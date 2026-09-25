@@ -19,8 +19,11 @@ import { canonicalize } from '@/usage/canonical';
 import { secureGet, secureSet, secureRemove } from '@/lib/secureStore';
 
 const RELAY_URL = import.meta.env.VITE_RELAY_URL ?? 'http://127.0.0.1:4000';
-const APP_URL =
-  import.meta.env.VITE_APP_URL ?? (typeof location !== 'undefined' ? location.origin : 'https://app.forenlabs.co.uk');
+// The canonical public site that shared invite links must point at. We
+// deliberately do NOT use location.origin: the app may be served from a Render
+// *.onrender.com URL (or any preview host), and an invite should always open the
+// real website. Set VITE_APP_URL at build time to override (e.g. for local dev).
+const APP_URL = import.meta.env.VITE_APP_URL ?? 'https://app.forenlabs.co.uk';
 
 const K_CODE = 'foren.referral.code'; // this device's own shareable code (display form)
 const K_REDEEMED = 'foren.referral.redeemed'; // '1' once we've redeemed an inbound link
