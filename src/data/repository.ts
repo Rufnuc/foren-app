@@ -8,7 +8,17 @@ import {
   type EvidencePlain,
   type AccountPlain,
 } from './db';
-import { encryptString, decryptString } from '@/lib/crypto';
+import {
+  encryptString,
+  decryptString,
+  generateDekRaw,
+  importDek,
+  wrapDek,
+  unwrapDek,
+  type WrappedKey,
+  type Ciphertext,
+} from '@/lib/crypto';
+import { loadConfig, saveConfig, type VaultConfig } from '@/lib/vaultConfig';
 import { analyzeText } from '@/lib/analysis';
 import { buildCommitment } from '@/lib/merkle';
 import { anchorRoot, stampBitcoin, verifyBitcoin } from '@/lib/relay';
@@ -295,10 +305,111 @@ export async function saveAccount(
 
 // ── Maintenance ──────────────────────────────────────────────────────────────
 
-/** Raw encrypted backup (records stay ciphertext; safe to write to disk). */
-export async function exportEncryptedBackup(): Promise<string> {
-  const [cases, evidence] = await Promise.all([db.cases.toArray(), db.evidence.toArray()]);
-  return JSON.stringify({ format: 'foren-backup-v1', exportedAt: Date.now(), cases, evidence }, null, 2);
+// ── Encrypted backup + restore ────────────────────────────────────────────────
+//
+// A backup is a full, PORTABLE snapshot so a survivor who loses or replaces a
+// phone can get their vault back. It bundles every table AND the vault key
+// material (so the restored vault unlocks with the same passcode/recovery), then
+// locks the whole thing under a backup password:
+//
+//   backupDEK = random 256-bit key
+//   wrappedKey = wrapDek(backupPassword, backupDEK)     // Argon2id — one guess = one KDF
+//   cipher     = AES-GCM(backupDEK, JSON(everything))    // the file is fully opaque
+//
+// Without the password the file reveals nothing — not even how many records
+// exist. Restoring requires the password (unwrap → decrypt), so the backup is
+// "tied to a key like the passphrase," and that key is the only lock.
+
+// Disguise-safe: the file lands in the user's Downloads, so its format id (and
+// filename, set by the UI) read as a puzzle game's save data, never "Foren".
+const BACKUP_FORMAT = 'puzzle-backup-v2' as const;
+
+interface BackupPayload {
+  cases: StoredCase[];
+  evidence: StoredEvidence[];
+  commitments: StoredCommitment[];
+  accounts: StoredAccount[];
+  /** The vault config so the restored vault is unlockable with the original secrets. */
+  vaultConfig: VaultConfig | null;
+}
+
+interface BackupFile {
+  format: typeof BACKUP_FORMAT;
+  exportedAt: number;
+  wrappedKey: WrappedKey; // backup DEK wrapped by the backup password (Argon2id)
+  cipher: Ciphertext; // AES-GCM(backup DEK, JSON(BackupPayload))
+}
+
+/**
+ * Produce a password-locked, fully-restorable backup file (as a JSON string).
+ * `password` is the key that locks it — the same one is required to restore.
+ */
+export async function exportEncryptedBackup(password: string): Promise<string> {
+  const [cases, evidence, commitments, accounts, vaultConfig] = await Promise.all([
+    db.cases.toArray(),
+    db.evidence.toArray(),
+    db.commitments.toArray(),
+    db.accounts.toArray(),
+    loadConfig(),
+  ]);
+  const payload: BackupPayload = { cases, evidence, commitments, accounts, vaultConfig };
+
+  const backupDekRaw = generateDekRaw();
+  const wrappedKey = await wrapDek(password, backupDekRaw);
+  const backupKey = await importDek(backupDekRaw);
+  const cipher = await encryptString(backupKey, JSON.stringify(payload));
+
+  const file: BackupFile = { format: BACKUP_FORMAT, exportedAt: Date.now(), wrappedKey, cipher };
+  return JSON.stringify(file);
+}
+
+export type RestoreOutcome = 'restored' | 'bad-file' | 'wrong-password' | 'error';
+
+function isBackupFile(f: unknown): f is BackupFile {
+  if (!f || typeof f !== 'object') return false;
+  const b = f as Record<string, unknown>;
+  return b.format === BACKUP_FORMAT && !!b.wrappedKey && !!b.cipher;
+}
+
+/**
+ * Restore a backup produced by exportEncryptedBackup. REPLACES all local vault
+ * data + config with the backup's, then the caller re-initialises the app so the
+ * user unlocks with their original passcode. Returns why it failed if it did.
+ */
+export async function importEncryptedBackup(fileText: string, password: string): Promise<RestoreOutcome> {
+  let file: unknown;
+  try {
+    file = JSON.parse(fileText);
+  } catch {
+    return 'bad-file';
+  }
+  if (!isBackupFile(file)) return 'bad-file';
+
+  const backupDekRaw = await unwrapDek(password, file.wrappedKey);
+  if (!backupDekRaw) return 'wrong-password';
+
+  let payload: BackupPayload;
+  try {
+    const backupKey = await importDek(backupDekRaw);
+    payload = JSON.parse(await decryptString(backupKey, file.cipher)) as BackupPayload;
+  } catch {
+    // Correct-length key but content won't decrypt/parse → wrong password or corrupt.
+    return 'wrong-password';
+  }
+
+  try {
+    await db.transaction('rw', db.cases, db.evidence, db.commitments, db.accounts, async () => {
+      await Promise.all([db.cases.clear(), db.evidence.clear(), db.commitments.clear(), db.accounts.clear()]);
+      if (payload.cases?.length) await db.cases.bulkAdd(payload.cases);
+      if (payload.evidence?.length) await db.evidence.bulkAdd(payload.evidence);
+      if (payload.commitments?.length) await db.commitments.bulkAdd(payload.commitments);
+      if (payload.accounts?.length) await db.accounts.bulkAdd(payload.accounts);
+    });
+    if (payload.vaultConfig) await saveConfig(payload.vaultConfig);
+    return 'restored';
+  } catch {
+    return 'error';
+  }
 }
 
 // ── Commitments ──────────────────────────────────────────────────────────────

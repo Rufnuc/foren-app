@@ -22,5 +22,6 @@ export { EvidenceDetailModal } from './EvidenceDetailModal';
 export { ChangePasscodeModal } from './ChangePasscodeModal';
 export { RecoveryTestModal } from './RecoveryTestModal';
 export { ExportModal } from './ExportModal';
+export { BackupModal } from './BackupModal';
 export { CommitmentPanel } from './CommitmentPanel';
 export { SettingRow, Toggle, SectionCard } from './SettingsPrimitiveComponents';

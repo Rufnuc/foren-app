@@ -8,13 +8,14 @@ import {
   Toggle,
   ChangePasscodeModal,
   RecoveryTestModal,
+  BackupModal,
   DiscreteKeypad,
   PassphraseEntry,
   CrisisBanner,
 } from '@/components';
 import { useVaultStore } from '@/store/vaultStore';
 import { useCases, useRestoreCase, usePurgeCase } from '@/data/queries';
-import { exportEncryptedBackup, storageUsage, recoveryDeadline } from '@/data/repository';
+import { storageUsage, recoveryDeadline } from '@/data/repository';
 import { biometricAvailable } from '@/lib/biometric';
 import type { DuressState } from '@/types';
 
@@ -29,15 +30,6 @@ function formatBytes(n: number): string {
   const units = ['B', 'KB', 'MB', 'GB'];
   const i = Math.min(Math.floor(Math.log(n) / Math.log(1024)), units.length - 1);
   return `${(n / 1024 ** i).toFixed(1)} ${units[i]}`;
-}
-
-function download(filename: string, text: string) {
-  const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 // Settings (spec 2.11).
@@ -61,6 +53,7 @@ export function Settings() {
 
   const [showChangePass, setShowChangePass] = useState(false);
   const [showRecovery, setShowRecovery] = useState(false);
+  const [backupMode, setBackupMode] = useState<null | 'export' | 'restore'>(null);
   const [duressKeypad, setDuressKeypad] = useState(false);
   const [bioAvailable, setBioAvailable] = useState(false);
   const [bioPrompt, setBioPrompt] = useState(false);
@@ -148,13 +141,17 @@ export function Settings() {
           </SettingRow>
           <SettingRow
             label="Encrypted backup"
-            sublabel="Export your encrypted data"
-            onClick={async () => {
-              download('foren-backup.json', await exportEncryptedBackup());
-              flash('Backup exported');
-            }}
+            sublabel="Export a password-locked copy of everything"
+            onClick={() => setBackupMode('export')}
           >
             <span className="text-xs text-gold">Export</span>
+          </SettingRow>
+          <SettingRow
+            label="Restore from backup"
+            sublabel="Replace this device’s data with a backup"
+            onClick={() => setBackupMode('restore')}
+          >
+            <span className="text-xs text-gold">Restore</span>
           </SettingRow>
           <SettingRow label="Panic wipe" sublabel="Rapid Safety-Exit taps wipe the device">
             <Toggle
@@ -282,6 +279,14 @@ export function Settings() {
       )}
 
       {showRecovery && <RecoveryTestModal onClose={() => setShowRecovery(false)} />}
+
+      {backupMode && (
+        <BackupModal
+          mode={backupMode}
+          onClose={() => setBackupMode(null)}
+          onRestored={() => window.location.reload()}
+        />
+      )}
 
       {duressKeypad && (
         <DiscreteKeypad
