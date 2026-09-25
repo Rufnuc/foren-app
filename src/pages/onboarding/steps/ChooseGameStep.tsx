@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { GameType } from '@/types';
 import { DecoyGame } from '@/games/DecoyGame';
+import { BackupModal } from '@/components';
 import { WizardLayout } from '../WizardLayout';
 import type { StepProps } from '../types';
 
@@ -15,6 +16,7 @@ const GAMES: Array<{ id: GameType; name: string; blurb: string; icon: string }> 
 export function ChooseGameStep({ draft, update, onNext }: StepProps) {
   const [selected, setSelected] = useState<GameType>(draft.game);
   const [confirming, setConfirming] = useState(false);
+  const [restoring, setRestoring] = useState(false);
 
   if (confirming) {
     return (
@@ -68,7 +70,24 @@ export function ChooseGameStep({ draft, update, onNext }: StepProps) {
           <span className="text-3xl" aria-hidden="true">✨</span>
           <span className="flex-1 font-semibold text-primary">More games coming soon</span>
         </div>
+
+        {/* Returning on a new device? Bring an existing vault back from a backup. */}
+        <button
+          type="button"
+          onClick={() => setRestoring(true)}
+          className="mt-2 text-center text-sm text-secondary underline"
+        >
+          Restore from a backup
+        </button>
       </div>
+
+      {restoring && (
+        <BackupModal
+          mode="restore"
+          onClose={() => setRestoring(false)}
+          onRestored={() => window.location.reload()}
+        />
+      )}
     </WizardLayout>
   );
 }
