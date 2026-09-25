@@ -10,6 +10,7 @@ import {
   RecoveryTestModal,
   BackupModal,
   HostedBackupSection,
+  HelpAFriendSection,
   DiscreteKeypad,
   PassphraseEntry,
   CrisisBanner,
@@ -176,6 +177,8 @@ export function Settings() {
         </SectionCard>
 
         <HostedBackupSection flash={flash} />
+
+        <HelpAFriendSection flash={flash} />
 
         {/* DATA */}
         <SectionCard title="Data">

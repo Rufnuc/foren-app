@@ -24,5 +24,6 @@ export { RecoveryTestModal } from './RecoveryTestModal';
 export { ExportModal } from './ExportModal';
 export { BackupModal } from './BackupModal';
 export { HostedBackupSection } from './HostedBackupSection';
+export { HelpAFriendSection } from './HelpAFriendSection';
 export { CommitmentPanel } from './CommitmentPanel';
 export { SettingRow, Toggle, SectionCard } from './SettingsPrimitiveComponents';
