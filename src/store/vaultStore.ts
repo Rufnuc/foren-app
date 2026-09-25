@@ -19,6 +19,7 @@ const BIO_DEK_KEY = 'foren.vault.biodek';
 import { wipeAll } from '@/data/db';
 import { queryClient } from '@/lib/queryClient';
 import { loadConfig, saveConfig, clearConfig, type VaultConfig } from '@/lib/vaultConfig';
+import { nudgeHostedBackup } from '@/lib/hostedBackup';
 
 // Result of an unlock attempt.
 //   'duress'  — a valid duress code was entered; caller shows the decoy.
@@ -152,6 +153,7 @@ export const useVaultStore = create<VaultState>((set, get) => ({
       attemptGuard.recordSuccess();
       const encryptionKey = await importDek(dekRaw);
       set({ isUnlocked: true, encryptionKey, duressMode: false });
+      void nudgeHostedBackup(); // sync any changes from a previous session
       return 'unlocked';
     }
 

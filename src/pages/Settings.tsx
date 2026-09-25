@@ -9,6 +9,7 @@ import {
   ChangePasscodeModal,
   RecoveryTestModal,
   BackupModal,
+  HostedBackupSection,
   DiscreteKeypad,
   PassphraseEntry,
   CrisisBanner,
@@ -173,6 +174,8 @@ export function Settings() {
             </SettingRow>
           )}
         </SectionCard>
+
+        <HostedBackupSection flash={flash} />
 
         {/* DATA */}
         <SectionCard title="Data">
