@@ -99,7 +99,11 @@ export function HelpAFriendSection({ flash }: { flash: (m: string) => void }) {
           label="Your activity"
           sublabel={
             score
-              ? `${scoreBand(score.score)} · more active than ${Math.round(score.percentile * 100)}% of people`
+              ? // Only claim a percentile once there are enough people to compare
+                // against — otherwise it reads oddly for the earliest users.
+                score.population >= 5
+                ? `${scoreBand(score.score)} · more active than ${Math.round(score.percentile * 100)}% of people`
+                : scoreBand(score.score)
               : 'Private to this device'
           }
         >
