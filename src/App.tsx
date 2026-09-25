@@ -6,6 +6,7 @@ import { router } from '@/routes/router';
 import { ErrorBoundary, SecureContextGuard, PuzzleSplash } from '@/components';
 import { useVaultStore } from '@/store/vaultStore';
 import { initUsage } from '@/usage';
+import { syncHostedBackup } from '@/lib/hostedBackup';
 
 // Minimum time the "Puzzle" game-intro splash stays up, so a fast init still
 // looks like a game booting rather than a flicker.
@@ -32,6 +33,16 @@ function Boot({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (initialized) void initUsage();
   }, [initialized]);
+
+  // When the app is sent to the background, push any vault changes to the hosted
+  // backup (no-op if it's off or nothing changed). Encrypted blob only.
+  useEffect(() => {
+    const onHide = () => {
+      if (document.visibilityState === 'hidden') void syncHostedBackup().catch(() => {});
+    };
+    document.addEventListener('visibilitychange', onHide);
+    return () => document.removeEventListener('visibilitychange', onHide);
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setMinElapsed(true), SPLASH_MIN_MS);

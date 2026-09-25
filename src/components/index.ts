@@ -23,5 +23,6 @@ export { ChangePasscodeModal } from './ChangePasscodeModal';
 export { RecoveryTestModal } from './RecoveryTestModal';
 export { ExportModal } from './ExportModal';
 export { BackupModal } from './BackupModal';
+export { HostedBackupSection } from './HostedBackupSection';
 export { CommitmentPanel } from './CommitmentPanel';
 export { SettingRow, Toggle, SectionCard } from './SettingsPrimitiveComponents';

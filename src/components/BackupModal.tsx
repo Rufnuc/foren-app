@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Modal } from './Modal';
-import { exportEncryptedBackup, importEncryptedBackup, type RestoreOutcome } from '@/data/repository';
+import { exportEncryptedBackup, importEncryptedBackup } from '@/data/repository';
+import { restoreFromHostedBackup, type HostedRestoreOutcome } from '@/lib/hostedBackup';
 
 // Disguise-safe filename — reads as a puzzle game's save file in Downloads.
 const BACKUP_FILENAME = 'puzzle-backup.json';
@@ -120,13 +121,17 @@ function ExportForm({ onClose }: { onClose: () => void }) {
   );
 }
 
-const RESTORE_ERRORS: Record<Exclude<RestoreOutcome, 'restored'>, string> = {
+const RESTORE_ERRORS: Record<Exclude<HostedRestoreOutcome, 'restored'>, string> = {
   'bad-file': 'That doesn’t look like a valid backup file.',
-  'wrong-password': 'Wrong password, or the file is corrupted.',
+  'wrong-password': 'Wrong password/code, or the backup is corrupted.',
+  'not-found': 'No cloud backup found for that Backup Code.',
+  network: 'Couldn’t reach the backup server. Check your connection.',
   error: 'Could not restore the backup. Please try again.',
 };
 
 function RestoreForm({ onClose, onRestored }: { onClose: () => void; onRestored?: () => void }) {
+  const [source, setSource] = useState<'cloud' | 'file'>('cloud');
+  const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
   const [fileText, setFileText] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -147,16 +152,28 @@ function RestoreForm({ onClose, onRestored }: { onClose: () => void; onRestored?
 
   const submit = async () => {
     setError(null);
-    if (!fileText) return setError('Choose your backup file first.');
-    if (!password) return setError('Enter the backup password.');
     setBusy(true);
     try {
-      const outcome = await importEncryptedBackup(fileText, password);
-      if (outcome === 'restored') {
-        setDone(true);
+      let outcome: HostedRestoreOutcome;
+      if (source === 'cloud') {
+        if (!code.trim()) {
+          setBusy(false);
+          return setError('Enter your Backup Code.');
+        }
+        outcome = await restoreFromHostedBackup(code);
       } else {
-        setError(RESTORE_ERRORS[outcome]);
+        if (!fileText) {
+          setBusy(false);
+          return setError('Choose your backup file first.');
+        }
+        if (!password) {
+          setBusy(false);
+          return setError('Enter the backup password.');
+        }
+        outcome = await importEncryptedBackup(fileText, password);
       }
+      if (outcome === 'restored') setDone(true);
+      else setError(RESTORE_ERRORS[outcome]);
     } catch {
       setError(RESTORE_ERRORS.error);
     } finally {
@@ -197,36 +214,73 @@ function RestoreForm({ onClose, onRestored }: { onClose: () => void; onRestored?
             currently on this device with the backup’s contents.
           </p>
 
-          <input
-            ref={fileRef}
-            type="file"
-            accept="application/json,.json"
-            className="hidden"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) void pickFile(f);
-            }}
-          />
-          <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            className="w-full rounded-lg border border-white/15 bg-background px-3 py-2 text-left text-sm"
-          >
-            <span className="text-secondary">Backup file: </span>
-            <span className="text-primary">{fileName ?? 'Choose a file…'}</span>
-          </button>
+          {/* source toggle */}
+          <div className="flex gap-1 rounded-lg bg-background p-1">
+            {(['cloud', 'file'] as const).map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => {
+                  setSource(s);
+                  setError(null);
+                }}
+                className={`flex-1 rounded-md py-1.5 text-xs font-semibold ${
+                  source === s ? 'bg-plum text-primary' : 'text-secondary'
+                }`}
+              >
+                {s === 'cloud' ? 'Backup Code' : 'Backup file'}
+              </button>
+            ))}
+          </div>
 
-          <label className="block">
-            <span className="mb-1 block text-xs text-secondary">Backup password</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg bg-background px-3 py-2 text-primary"
-              autoComplete="off"
-              onKeyDown={(e) => e.key === 'Enter' && submit()}
-            />
-          </label>
+          {source === 'cloud' ? (
+            <label className="block">
+              <span className="mb-1 block text-xs text-secondary">Backup Code</span>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="ABCD-EFGH-…"
+                className="w-full rounded-lg bg-background px-3 py-2 font-mono tracking-widest text-primary"
+                autoComplete="off"
+                autoCapitalize="characters"
+                spellCheck={false}
+                onKeyDown={(e) => e.key === 'Enter' && submit()}
+              />
+            </label>
+          ) : (
+            <>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="application/json,.json"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) void pickFile(f);
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                className="w-full rounded-lg border border-white/15 bg-background px-3 py-2 text-left text-sm"
+              >
+                <span className="text-secondary">Backup file: </span>
+                <span className="text-primary">{fileName ?? 'Choose a file…'}</span>
+              </button>
+              <label className="block">
+                <span className="mb-1 block text-xs text-secondary">Backup password</span>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full rounded-lg bg-background px-3 py-2 text-primary"
+                  autoComplete="off"
+                  onKeyDown={(e) => e.key === 'Enter' && submit()}
+                />
+              </label>
+            </>
+          )}
           {error && <p className="text-sm text-danger">{error}</p>}
         </div>
       )}
