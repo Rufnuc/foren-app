@@ -4,6 +4,8 @@
 // deltas leave the device (see sign.ts), signed by the anonymous identity.
 
 import { getOrCreateIdentity } from './identity';
+import { SIGN_PARAMS, bytesToBase64Url } from './identity';
+import { canonicalize } from './canonical';
 import { buildSignedSubmission, type SignedSubmission } from './sign';
 import {
   getState,
@@ -35,6 +37,50 @@ function scheduleFlush(): void {
     flushTimer = null;
     void flush();
   }, FLUSH_DEBOUNCE_MS);
+}
+
+// Register this install once, so a device that finishes setup but hasn't done
+// anything yet still counts as a user. A signed proof of the anonymous identity
+// with NO counters — the relay records only the anonymous id. Idempotent both
+// locally (a flag) and server-side; best-effort and never throws.
+const REGISTERED_KEY = 'foren.usage.registered';
+export async function register(): Promise<void> {
+  if (!ENABLED) return;
+  try {
+    if (localStorage.getItem(REGISTERED_KEY) === '1') return;
+  } catch {
+    /* storage unavailable — fall through; the server dedupes anyway */
+  }
+  try {
+    const id = await getOrCreateIdentity();
+    const payload = {
+      v: 1,
+      anonId: id.anonId,
+      pubKey: id.pubKeyB64,
+      nonce: bytesToBase64Url(crypto.getRandomValues(new Uint8Array(16))),
+      issuedAt: Date.now(),
+    };
+    const sig = await crypto.subtle.sign(
+      SIGN_PARAMS,
+      id.privKey,
+      new TextEncoder().encode(canonicalize(payload)) as BufferSource,
+    );
+    const res = await fetch(`${RELAY_URL}/v1/usage/register`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ ...payload, signature: bytesToBase64Url(new Uint8Array(sig)) }),
+      keepalive: true,
+    });
+    if (res.ok) {
+      try {
+        localStorage.setItem(REGISTERED_KEY, '1');
+      } catch {
+        /* ignore */
+      }
+    }
+  } catch {
+    /* best-effort — a later boot retries */
+  }
 }
 
 /** Record one meaningful product action. Fire-and-forget; never throws. */

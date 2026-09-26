@@ -7,9 +7,9 @@
 // read or transmit incident data, evidence, files, locations, names, or keys.
 
 import { getOrCreateIdentity } from './identity';
-import { flush } from './track';
+import { flush, register } from './track';
 
-export { track, flush } from './track';
+export { track, flush, register } from './track';
 export { wipeUsage } from './store';
 export type { CounterKind } from './store';
 
@@ -22,6 +22,9 @@ export type { CounterKind } from './store';
 export async function initUsage(): Promise<void> {
   try {
     await getOrCreateIdentity();
+    // Count this install as a user even before it does anything (once per
+    // device; idempotent server-side). Then flush any pending action counters.
+    await register();
     await flush();
   } catch {
     /* tracking is optional — never block app startup */
