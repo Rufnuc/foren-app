@@ -86,6 +86,16 @@ export function AddToHomeStep({ onNext, onBack }: StepProps) {
           </div>
         )}
 
+        <div className="card border border-gold/40 text-sm">
+          <p className="font-semibold text-primary">How to open your vault</p>
+          <p className="mt-1 text-secondary">
+            It opens and plays like an ordinary game. To get back to your vault,{' '}
+            <span className="font-semibold text-primary">double-tap the top-right corner</span> of the
+            screen (or swipe up with two fingers), then enter your code. Nothing on screen points to it —
+            only you know it’s there. Try to remember this: it’s the only way in.
+          </p>
+        </div>
+
         <button type="button" onClick={onNext} className="btn-primary w-full">
           {installed ? 'Continue' : 'Done — continue'}
         </button>

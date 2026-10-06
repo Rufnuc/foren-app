@@ -18,6 +18,7 @@ const APP_TIPS = [
 
 const FAQ: Array<{ q: string; a: string }> = [
   { q: 'Can someone see this app?', a: 'Yes — it looks like a normal game. Your vault is hidden behind a code only you know.' },
+  { q: 'How do I open my vault again?', a: 'Double-tap the top-right corner of the screen (or swipe up with two fingers), then enter your code. Nothing on screen shows it — only you know it’s there.' },
   { q: 'What if I forget my passcode?', a: 'You can recover using the backup secret you saved during setup.' },
   { q: 'Is my evidence really encrypted?', a: 'Yes — on your device, with AES-256-GCM. The key is derived from your passcode and never leaves the device.' },
   { q: 'Can Foren see my evidence?', a: 'No. Encryption keys stay on your device. We cannot read your data even if asked.' },

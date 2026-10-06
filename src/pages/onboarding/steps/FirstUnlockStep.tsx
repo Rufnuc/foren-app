@@ -67,7 +67,8 @@ export function FirstUnlockStep({ draft, onBack }: StepProps) {
       <div className="text-center">
         <h1 className="text-xl font-semibold text-primary">You’re ready!</h1>
         <p className="mt-1 text-sm text-secondary">
-          Draw your symbol (or double-tap the top-right corner), then enter your code.
+          Practise opening it: <span className="font-semibold text-primary">double-tap the top-right
+          corner</span> (or swipe up with two fingers), then enter your code.
         </p>
       </div>
 
